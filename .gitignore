@@ -1,0 +1,4 @@
+server/config/
+server/build/
+**node_modules
+**.log
