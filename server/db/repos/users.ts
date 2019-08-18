@@ -1,6 +1,7 @@
 import {IDatabase, IMain, ColumnSet} from 'pg-promise';
 import {IResult} from 'pg-promise/typescript/pg-subset';
 import {users as sql} from '../sql';
+import { UserModel } from '../../types';
 
 export class UsersRepository {
 
@@ -111,14 +112,4 @@ export class UsersRepository {
 type UserColumnsets = {
     insert?: ColumnSet,
     update?: ColumnSet,
-};
-
-type UserModel = {
-	id: string,
-	email: string,
-	username: string,
-	first_name: string,
-	last_name: string,
-	initials: string,
-	profile_pic: string,
 };
