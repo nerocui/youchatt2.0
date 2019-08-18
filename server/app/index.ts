@@ -20,6 +20,7 @@ passport.use(
       const existUser = await db.users.findByEmail(profile.emails[0].value);
       if (existUser) {
         console.log(existUser);
+        done(null, existUser);
       } else {
         console.log('lets create a user');
       }

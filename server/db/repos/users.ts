@@ -28,8 +28,8 @@ export class UsersRepository {
 
     // Initializes the table with some user records, and return their id-s;
     async init() {
-        await this.create();
-        return this.db.map(sql.init, [], (row: { id: string }) => row.id);
+        return this.create();
+        //return this.db.map(sql.init, [], (row: { id: string }) => row.id);
     }
 
     // Drops the table;
