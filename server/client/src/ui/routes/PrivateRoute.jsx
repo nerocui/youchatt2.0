@@ -8,13 +8,10 @@ class PrivateRoute extends Component {
 		super(props);
 		this.renderRoute = this.renderRoute.bind(this);
 	}
-
-	componentDidMount() {
-		this.props.updateAuthInfo();
-	}
-
+	
 	renderRoute() {
 		const COMPONENT = this.props.component;
+		console.log('Props is', this.props);
 		if (this.props.loggedIn) {
 			return <COMPONENT />;
 		} else {
@@ -30,18 +27,16 @@ class PrivateRoute extends Component {
 	}
 }
 
-
-function mapDispatchToProps(dispatch) {
-	return {
-		updateAuthInfo
-	};
-}
-
 function mapStateToProps(state) {
 	console.log('mapping state to props', state);
 	return {
-		loggedIn: state.auth.loggedIn
+		loggedIn: state.authState.loggedIn
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);
+export default connect(
+	mapStateToProps,
+	{
+		updateAuthInfo
+	}
+)(PrivateRoute);

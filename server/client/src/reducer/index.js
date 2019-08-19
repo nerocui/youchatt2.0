@@ -5,7 +5,7 @@ import ThreadReducer from './reducer_thread';
 import RequestReducer from './reducer_request';
 
 const rootReducer = combineReducers({
-	auth: AuthReducer,
+	authState: AuthReducer,
 	contactState: ContactReducer,
 	threadState: ThreadReducer,
 	requestState: RequestReducer,

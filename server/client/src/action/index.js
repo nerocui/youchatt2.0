@@ -17,10 +17,11 @@ function setAuthInfoAction(user) {
 
 export function updateAuthInfo() {
 	return dispatch => {
+		console.log("getting current user");
 		axios.get(
 			'/api/current_user'
 		).then(res => {
-			dispatch(setAuthInfoAction(res));
+			dispatch(setAuthInfoAction(res.data));
 		});
 	};
 }

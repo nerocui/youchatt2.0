@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@nozbe/watermelondb": "^0.14.0",
-    "@nozbe/with-observables": "^1.0.5",
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
     "history": "^4.9.0",
@@ -41,7 +39,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "worker-loader": "^2.0.0"
-  }
+  "devDependencies": {}
 }

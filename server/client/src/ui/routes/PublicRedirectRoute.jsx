@@ -9,10 +9,6 @@ class PublicRedirectRoute extends Component {
 		this.renderRoute = this.renderRoute.bind(this);
 	}
 
-	componentDidMount() {
-		this.props.updateAuthInfo();
-	}
-
 	renderRoute() {
 		const COMPONENT = this.props.component;
 		if (this.props.loggedIn) {
@@ -30,17 +26,16 @@ class PublicRedirectRoute extends Component {
 	}
 }
 
-function mapDispatchToProps(dispatch) {
-	return {
-		updateAuthInfo
-	};
-}
-
 
 function mapStateToProps(state) {
 	return {
-		loggedIn: state.auth.loggedIn
+		loggedIn: state.authState.loggedIn
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PublicRedirectRoute);
+export default connect(
+	mapStateToProps, 
+	{
+		updateAuthInfo,
+	}
+)(PublicRedirectRoute);
