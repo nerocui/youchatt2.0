@@ -1,6 +1,6 @@
 import {IDatabase, IMain, ColumnSet} from 'pg-promise';
 import {IResult} from 'pg-promise/typescript/pg-subset';
-import {users as sql} from '../sql';
+import {users as sql, friends as friends_sql} from '../sql';
 import { UserModel } from '../../types';
 
 export class UsersRepository {
