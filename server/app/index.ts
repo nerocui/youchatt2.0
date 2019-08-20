@@ -66,30 +66,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-/**
- * 
- * User Profile:  { 
- * id: '105047239642470460740',
-  displayName: 'Zhuowen Cui',
-  name: { familyName: 'Cui', givenName: 'Zhuowen' },
-  emails: [ { value: 'zhuowencui@gmail.com', verified: true } ],
-  photos:
-   [ { value:
-        'https://lh6.googleusercontent.com/-PeHwnt1UBI0/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3reUoYoEo8x2ucUJblxrnhAt0W4gMQ/photo.jpg' } ],
-  provider: 'google',
-  _raw:
-   '{\n  "sub": "105047239642470460740",\n  "name": "Zhuowen Cui",\n  "given_name": "Zhuowen",\n  "family_name": "Cui",\n  "picture": "https://lh6.googleusercontent.com/-PeHwnt1UBI0/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3reUoYoEo8x2ucUJblxrnhAt0W4gMQ/photo.jpg",\n  "email": "zhuowencui@gmail.com",\n  "email_verified": true,\n  "locale": "en"\n}',
-  _json:
-   { sub: '105047239642470460740',
-     name: 'Zhuowen Cui',
-     given_name: 'Zhuowen',
-     family_name: 'Cui',
-     picture:
-      'https://lh6.googleusercontent.com/-PeHwnt1UBI0/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3reUoYoEo8x2ucUJblxrnhAt0W4gMQ/photo.jpg',
-     email: 'zhuowencui@gmail.com',
-     email_verified: true,
-     locale: 'en' } }
- */
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

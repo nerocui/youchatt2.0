@@ -11,13 +11,3 @@ CREATE TABLE IF NOT EXISTS users
 	initials text NOT NULL,
 	profile_pic text NOT NULL
 )
-
-/*
-	addColumn('_id', lf.Type.STRING).
-	addColumn('username', lf.Type.STRING).
-	addColumn('first_name', lf.Type.STRING).
-	addColumn('last_name', lf.Type.STRING).
-	addColumn('initials', lf.Type.STRING).
-	addColumn('profile_pic', lf.Type.STRING).
-	addPrimaryKey(['_id']);
-*/
