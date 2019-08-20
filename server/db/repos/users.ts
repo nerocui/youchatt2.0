@@ -49,8 +49,8 @@ export class UsersRepository {
     }
  
     // Tries to delete a user by id, and returns the number of records deleted;
-    async remove(id: number) {
-        return this.db.result('DELETE FROM users WHERE id = $1', +id, (r: IResult) => r.rowCount);
+    async remove(id: string) {
+        return this.db.result('DELETE FROM users WHERE id = $1', id, (r: IResult) => r.rowCount);
     }
 
     // Tries to find a user from id;
@@ -76,7 +76,27 @@ export class UsersRepository {
     // Returns the total number of users;
     async total() {
         return this.db.one('SELECT count(*) FROM users', [], (a: { count: number }) => +a.count);
-	}
+    }
+    
+    async addFriend(user_id: string, friend_id: string) {
+        this.db.none(friends_sql.add, [user_id, friend_id]);
+        return this.db.one('SELECT * FROM users WHERE id = $1', friend_id);
+    }
+
+    async removeFriend(user_id: string, friend_id: string) {
+        try {
+            this.db.none(friends_sql.remove, [user_id, friend_id]);
+        } catch (e) {
+            try {
+                this.db.none(friends_sql.remove, [friend_id, user_id]);
+            } catch (e) {
+                console.log("Relationship does not exist, ", e);
+                return null;
+            }
+        }
+        //TODO: need to unify user relationship instead of user vs. friend
+        return this.db.one('SELECT * FROM users WHERE id = $1', friend_id);
+    }
 	
 	userModelToArray(user: UserModel): Array<string> {
 		return [

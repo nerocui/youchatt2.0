@@ -7,3 +7,9 @@ export type UserModel = {
 	initials: string,
 	profile_pic: string,
 };
+
+export type RequestModel = {
+	id: string,
+	from_user_id: string,
+	to_user_id: string,
+};

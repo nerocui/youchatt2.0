@@ -3,7 +3,7 @@ import * as dbConfig from '../config/db_config.json'; // db connection details
 import * as pgPromise from 'pg-promise'; // pg-promise core library
 import {Diagnostics} from './diagnostics'; // optional diagnostics
 import {IInitOptions, IDatabase, IMain} from 'pg-promise';
-import {IExtensions, UsersRepository} from './repos';
+import {IExtensions, UsersRepository, RequestRepository} from './repos';
 
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
 
@@ -21,6 +21,7 @@ const initOptions: IInitOptions<IExtensions> = {
         // Do not use 'require()' here, because this event occurs for every task and transaction being executed,
         // which should be as fast as possible.
         obj.users = new UsersRepository(obj, pgp);
+        obj.requests = new RequestRepository(obj, pgp);
     }
 };
 
