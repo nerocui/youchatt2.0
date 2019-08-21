@@ -12,8 +12,9 @@ import ProfilePage from '../pages/ProfilePage';
 import RequestsPage from '../pages/RequestsPage';
 import SearchPage from '../pages/SearchPage';
 import PrivateRoute from "./PrivateRoute";
-import AppTopBar from '../components/AppBar';
-import SideMenu from '../components/SideMenu';
+import DynamicAppBar from '../components/appbar/DynamicAppBar';
+import SideMenu from '../components/sidemenu/SideMenu';
+import Paper from '@material-ui/core/Paper';
 
 
 class App extends React.Component {
@@ -39,16 +40,18 @@ class App extends React.Component {
 		return (
 			<Router>
 				<div>
-					<AppTopBar openSideMenu={this.openSideBar} />
+					<DynamicAppBar openSideMenu={this.openSideBar} />
 					<SideMenu open={this.state.sideBarOpen} closeSideBar={this.closeSideBar} />
-					<Switch>
-						<PublicRedirectRoute exact path='/' component={LoginPage} />
-						<PrivateRoute exact path='/main' component={MainPage} />
-						<PrivateRoute exact path='/contacts' component={ContactsPage} />
-						<PrivateRoute exact path='/search' component={SearchPage} />
-						<PrivateRoute exact path='/requests' component={RequestsPage} />
-						<PrivateRoute exact path='/thread' component={ChatPage} />
-					</Switch>
+					<Paper className="page--container">
+						<Switch>
+							<PublicRedirectRoute exact path='/' component={LoginPage} />
+							<PrivateRoute exact path='/main' component={MainPage} />
+							<PrivateRoute exact path='/contacts' component={ContactsPage} />
+							<PrivateRoute exact path='/search' component={SearchPage} />
+							<PrivateRoute exact path='/requests' component={RequestsPage} />
+							<PrivateRoute exact path='/thread' component={ChatPage} />
+						</Switch>
+					</Paper>
 				</div>
 			</Router>
 		);

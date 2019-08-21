@@ -11,7 +11,6 @@ class PrivateRoute extends Component {
 	
 	renderRoute() {
 		const COMPONENT = this.props.component;
-		console.log('Props is', this.props);
 		if (this.props.loggedIn) {
 			return <COMPONENT />;
 		} else {
@@ -28,7 +27,6 @@ class PrivateRoute extends Component {
 }
 
 function mapStateToProps(state) {
-	console.log('mapping state to props', state);
 	return {
 		loggedIn: state.authState.loggedIn
 	};

@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { closeSideMenu } from '../../../action';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -9,6 +11,7 @@ import ImageOutlined from '@material-ui/icons/ImageOutlined';
 import StarBorder from '@material-ui/icons/StarBorder';
 import PersonOutline from '@material-ui/icons/PersonOutline';
 import SettingsOutlined from '@material-ui/icons/SettingsOutlined';
+import HomeIconOutlined from '@material-ui/icons/HomeOutlined';
 import NotificationIconOutline from '@material-ui/icons/NotificationImportantOutlined';
 import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
@@ -24,9 +27,14 @@ const useStyles = makeStyles({
 	},
 });
 
-const devide = 3;
+const devide = 4;
 
 const sideBarConfig = [
+	{
+		label: 'Home',
+		route: '/main',
+		Icon: HomeIconOutlined
+	},
 	{
 		label: 'Contact List',
 		route: '/contacts',
@@ -78,14 +86,14 @@ function ListItemLink({label, route, Icon}) {
 	);
 }
  
-export default function SideMenu({open, requests = 0, closeSideBar}) {
+function SideMenu({sideMenuOpen, requests = 0, closeSideMenu}) {
 	const classes = useStyles();
 	const sideList = () => (
 		<div
 		  className={classes.list}
 		  role="presentation"
-		  onClick={closeSideBar}
-		  onKeyDown={closeSideBar}
+		  onClick={closeSideMenu}
+		  onKeyDown={closeSideMenu}
 		>
 		  <List>
 			{sideBarConfig.slice(0, devide).map(props => (
@@ -105,11 +113,19 @@ export default function SideMenu({open, requests = 0, closeSideBar}) {
 	);
 	 return (
 		<SwipeableDrawer
-			open={open}
-			onClose={closeSideBar}
-			onOpen={closeSideBar}
+			open={sideMenuOpen}
+			onClose={closeSideMenu}
+			onOpen={closeSideMenu}
 		>
 			{sideList()}
 		</SwipeableDrawer>
 	 );
- }
+}
+
+function mapStateToProps(state) {
+	return {
+		sideMenuOpen: state.uiState.sideMenuOpen
+	}
+}
+
+export default connect(mapStateToProps, {closeSideMenu})(SideMenu);

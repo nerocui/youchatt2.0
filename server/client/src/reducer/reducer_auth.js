@@ -6,12 +6,9 @@ const initialState = {
 };
 
 export default function(state = initialState, action) {
-	console.log('received action:', action);
 	switch(action.type) {
 		case SET_AUTH_INFO:
-			const newState = Object.assign({}, state, {user: action.payload, loggedIn: !!action.payload});
-			console.log('returning new state: ', newState);
-			return newState;
+			return Object.assign({}, state, {user: action.payload, loggedIn: !!action.payload});
 		case LOGOUT:
 			return initialState;
 		default:

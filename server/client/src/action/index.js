@@ -1,16 +1,9 @@
-import {
-	SET_AUTH_INFO,
-	LOGOUT,
-	SET_CONTACTS,
-	SET_REQUESTS,
-	SET_THREADS,
-	CHAT,
-} from './type';
+import * as TYPE from './type';
 import axios from 'axios';
 
 function setAuthInfoAction(user) {
 	return {
-		type: SET_AUTH_INFO,
+		type: TYPE.SET_AUTH_INFO,
 		payload: user,
 	};
 }
@@ -28,34 +21,46 @@ export function updateAuthInfo() {
 
 export function setContacts(contacts) {
 	return {
-		type: SET_CONTACTS,
+		type: TYPE.SET_CONTACTS,
 		payload: contacts,
 	};
 }
 
 export function setThreads(threads) {
 	return {
-		type: SET_THREADS,
+		type: TYPE.SET_THREADS,
 		payload: threads,
 	};
 }
 
 export function setRequests(requests) {
 	return {
-		type: SET_REQUESTS,
+		type: TYPE.SET_REQUESTS,
 		payload: requests,
 	};
 }
 
 export function chat(thread) {
 	return {
-		type: CHAT,
+		type: TYPE.CHAT,
 		payload: thread,
 	};
 }
 
 export function logout() {
 	return {
-		type: LOGOUT
+		type: TYPE.LOGOUT
+	};
+}
+
+export function openSideMenu() {
+	return {
+		type: TYPE.OPEN_SIDE_MENU
+	};
+}
+
+export function closeSideMenu() {
+	return {
+		type: TYPE.CLOSE_SIDE_MENU
 	};
 }

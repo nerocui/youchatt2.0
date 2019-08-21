@@ -20,8 +20,12 @@ function loadInitialState() {
 		requestState = {},
 		momentState = {},
 		profileState = {},
+		uiState = {},
 		settingState = {};
 
+	uiState = {
+		sideMenuOpen: false,
+	}
 	state = {
 		authState,
 		contactState,
@@ -30,6 +34,7 @@ function loadInitialState() {
 		requestState,
 		momentState,
 		profileState,
+		uiState,
 		settingState,
 	};
 	return state;
@@ -42,7 +47,7 @@ export function startUp() {
 
 	const store = createStoreWithMiddleware(
 		rootReducer,
-		{}
+		loadInitialState(),
 	);
 	ReactDOM.render(
 		(

@@ -1,0 +1,12 @@
+.page--container.MuiPaper-root {
+	@media (max-width: 600px) {
+		height: calc(100vh - 56px);
+		padding-top: 56px;
+	}
+	@media (min-width: 600px) {
+		height: calc(100vh - 64px);
+		padding-top: 64px;
+	}
+	width: 100vw;
+	
+}

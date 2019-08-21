@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuButton from './MenuButton';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import Menu from '@material-ui/core/Menu';
@@ -19,27 +20,42 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
+function MenuItemLink({to, onClick, label}) {
+	return <MenuItem onClick={onClick}><Link to={to} style={{ textDecoration: 'none', color: 'inherit' }}>{label}</Link></MenuItem>;
+}
+
 export default function AppTopBar(props) {
 	const classes = useStyles();
+	const [addButtonAnchorEl, setAnchorAddButton] = React.useState(null);
+
+	function handleAddButtonClick(event) {
+		setAnchorAddButton(event.currentTarget);
+	}
+
+	function handleAddMenuClose() {
+		setAnchorAddButton(null);
+	}
+	console.log('rerendered');
 	return (
 		<AppBar>
 			<Toolbar>
-				<IconButton edge="start" color="inherit" aria-label="open drawer" onClick={props.openSideMenu}>
-					<MenuIcon />
-				</IconButton>
+				<MenuButton />
 				<Typography variant="h6" className={classes.title}>
 					YouChat
 				</Typography>
 				<div className={classes.grow} />
-				<IconButton color="inherit">
+				<IconButton color="inherit" onClick={handleAddButtonClick}>
 					<AddIcon />
 				</IconButton>
 				<Menu
 					id="simple-menu"
+					anchorEl={addButtonAnchorEl}
 					keepMounted
+					open={Boolean(addButtonAnchorEl)}
+					onClose={handleAddMenuClose}
 				>
-					<MenuItem>New Chat</MenuItem>
-					<MenuItem>Add New Contact</MenuItem>
+					<MenuItem onClick={handleAddMenuClose}>New Chat</MenuItem>
+					<MenuItemLink onClick={handleAddMenuClose} to='/search' label='Add New Contact'  />
 				</Menu>
 			</Toolbar>
 		</AppBar>
