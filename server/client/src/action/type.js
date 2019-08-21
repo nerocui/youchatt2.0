@@ -7,3 +7,5 @@ export const CHAT = 'CHAT';
 export const OPEN_SIDE_MENU = 'OPEN_SIDE_MENU';
 export const CLOSE_SIDE_MENU = 'CLOSE_SIDE_MENU';
 export const SEARCH_CONTACTS = 'SEARCH_CONTACTS';
+export const SET_SENT_REQUEST = 'SET_SENT_REQUEST';
+export const REDUCE_SEARCH_RESULT = 'REDUCE_SEARCH_RESULT';

@@ -31,6 +31,13 @@ function setSearchResult(res) {
 	};
 }
 
+function reduceSearcResult(id) {
+	return {
+		type: TYPE.REDUCE_SEARCH_RESULT,
+		payload: id,
+	};
+}
+
 export function searchContacts(term) {
 	return dispatch => {
 		index.search({query: term})
@@ -40,6 +47,27 @@ export function searchContacts(term) {
 			})
 			.catch(e => {
 				console.log('errors: ', e);
+			});
+	};
+}
+
+function setSentRequest(res) {
+	return {
+		type: TYPE.SET_SENT_REQUEST,
+		payload: res,
+	};
+}
+
+export function sendRequest(to_user_id) {
+	return dispatch => {
+		axios.post('/api/request/add', null, {params: {to_user_id}})
+			.then(res => {
+				console.log('sent request: ', res);
+				dispatch(setSentRequest(res.data));
+				dispatch(reduceSearcResult(to_user_id));
+			})
+			.catch(e => {
+				console.log('could not send request: ', e);
 			});
 	};
 }

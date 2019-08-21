@@ -1,11 +1,12 @@
 import React from 'react';
 import SearchResult from '../components/cards/SearchResult';
 import { connect } from 'react-redux';
+import { sendRequest } from '../../action';
 
-const SearchPage = ({results}) => {
+const SearchPage = ({results, sendRequest}) => {
 	return (
 		<div className='page'>
-			{results.map(res => <SearchResult {...res}/>)}
+			{results.map(res => <SearchResult {...res} sendRequest={sendRequest}/>)}
 		</div>
 	);
 }
@@ -16,4 +17,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(SearchPage);
+export default connect(mapStateToProps, {sendRequest})(SearchPage);

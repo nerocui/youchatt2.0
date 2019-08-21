@@ -101,14 +101,15 @@ app.get('/api/logout', (req, res) => {
 
 app.post('/api/request/add', (req, res) => {
   //TODO: Add auth check in prod
-  const {id, to_user_id} = req.query;
-  if (!(id && to_user_id)) {
+  const {to_user_id} = req.query;
+  if (!to_user_id) {
     res.status(400);
     res.send('Bad Request');
+    return;
   }
   const request: RequestModel = {
-    id: req.query.id,
-    to_user_id: req.query.to_user_id,
+    id: uniqid(),
+    to_user_id,
   };
   db.requests.add(request)
     .then(request => {

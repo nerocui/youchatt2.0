@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 	},
   }));
 
-const SearchResult = ({email, first_name, last_name, profile_pic, onClick}) => {
+const SearchResult = ({email, id, first_name, last_name, profile_pic, sendRequest}) => {
 	const classes = useStyles();
   	const theme = useTheme();
 	return (
@@ -45,7 +45,7 @@ const SearchResult = ({email, first_name, last_name, profile_pic, onClick}) => {
 					<Button
 						size="small"
 						color="primary"
-						onClick={onClick}
+						onClick={() => sendRequest(id)}
 					>
 						Send Friend Request
 					</Button>
