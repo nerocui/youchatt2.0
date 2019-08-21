@@ -12,19 +12,44 @@ import ProfilePage from '../pages/ProfilePage';
 import RequestsPage from '../pages/RequestsPage';
 import SearchPage from '../pages/SearchPage';
 import PrivateRoute from "./PrivateRoute";
+import AppTopBar from '../components/AppBar';
+import SideMenu from '../components/SideMenu';
 
 
 class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			sideBarOpen: false,
+		}
+		this.openSideBar = this.openSideBar.bind(this);
+		this.closeSideBar = this.closeSideBar.bind(this);
+	}
 
+	openSideBar() {
+		this.setState({sideBarOpen: true});
+	}
+
+	closeSideBar() {
+		this.setState({sideBarOpen: false});
+	}
 
 	render() {
 		this.props.updateAuthInfo();
 		return (
 			<Router>
-				<Switch>
-					<PublicRedirectRoute exact path='/' component={LoginPage} />
-					<PrivateRoute exact path='/main' component={MainPage} />
-				</Switch>
+				<div>
+					<AppTopBar openSideMenu={this.openSideBar} />
+					<SideMenu open={this.state.sideBarOpen} closeSideBar={this.closeSideBar} />
+					<Switch>
+						<PublicRedirectRoute exact path='/' component={LoginPage} />
+						<PrivateRoute exact path='/main' component={MainPage} />
+						<PrivateRoute exact path='/contacts' component={ContactsPage} />
+						<PrivateRoute exact path='/search' component={SearchPage} />
+						<PrivateRoute exact path='/requests' component={RequestsPage} />
+						<PrivateRoute exact path='/thread' component={ChatPage} />
+					</Switch>
+				</div>
 			</Router>
 		);
 	}
