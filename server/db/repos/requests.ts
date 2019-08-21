@@ -29,10 +29,13 @@ export class RequestRepository {
 		return this.db.one(requests_sql.add, this.requestModelToArray(request));
 	}
 
+	async getOneWithId(id: string) {
+		return this.db.one('SELECT * FROM requests WHERE id = $1', id);
+	}
+
 	requestModelToArray(request: RequestModel) {
 		return [
 			request.id,
-			request.from_user_id,
 			request.to_user_id,
 		];
 	}
@@ -45,7 +48,7 @@ export class RequestRepository {
 		}
 	}
 
-	async findAll(from_user_id: string) {
-		return this.db.any("SELECT * FROM requests WHERE from_user_id = $1", from_user_id);
+	async findAll(to_user_id: string) {
+		return this.db.any("SELECT * FROM requests WHERE to_user_id = $1", to_user_id);
 	}
 }

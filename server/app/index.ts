@@ -6,11 +6,15 @@ import * as cookieSession from 'cookie-session';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { key } from '../config/api_key';
 import { db } from '../db';
-import { UserModel } from '../types';
+import { UserModel, RequestModel } from '../types';
+import * as algoliasearch from 'algoliasearch';
 
 // Create a new express application instance
 const app: express.Application = express();
 db.users.init();
+db.requests.create();
+const client = algoliasearch(key.algoliaApplicationID, key.algoliaAdminKey);
+const index = client.initIndex('dev_USERS');
 
 passport.serializeUser((user: UserModel, done: any) => {
   done(null, user.id);
@@ -49,6 +53,10 @@ passport.use(
         db.users.add(user)
           .then(user => {
             console.log("Created user: ", user);
+            index.addObject({
+              objectID: user.id,
+              ...user
+            });
             done(null, user);
           })
       }
@@ -89,7 +97,81 @@ app.get('/api/current_user', (req, res) => {
 app.get('/api/logout', (req, res) => {
   req.logout();
   res.send(req.user);
-})
+});
+
+app.post('/api/request/add', (req, res) => {
+  //TODO: Add auth check in prod
+  const {id, to_user_id} = req.query;
+  if (!(id && to_user_id)) {
+    res.status(400);
+    res.send('Bad Request');
+  }
+  const request: RequestModel = {
+    id: req.query.id,
+    to_user_id: req.query.to_user_id,
+  };
+  db.requests.add(request)
+    .then(request => {
+      res.status(201);
+      res.send(request);
+    }).catch(e => {
+      console.log('Error: ', e);
+      res.status(500);
+      res.send('Fail to process request');
+    });
+});
+
+app.post('/api/request/accept', async (req, res) => {
+  //TODO: Add auth check in prod
+  const {id} = req.query;
+  if (!id) {
+    res.status(400);
+    res.send('Bad Request');
+  }
+  let request: RequestModel;
+  try {
+    request = await db.requests.getOneWithId(id);
+    const user: UserModel = await db.users.addFriend(req.user.id, request.to_user_id);
+    db.requests.remove(id);
+    res.status(201);
+    res.send(user);
+  } catch(e) {
+    console.log('Error: ', e);
+    res.status(500);
+    res.send('Fail to process request');
+  }
+});
+
+app.post('/api/request/decline', async (req, res) => {
+  //TODO: Add auth check in prod
+  const {id} = req.query;
+  if (!id) {
+    res.status(400);
+    res.send('Bad Request');
+  }
+  try {
+    db.requests.remove(id);
+    res.status(201);
+    res.send('Removed Request');
+  } catch(e) {
+    console.log('Error: ', e);
+    res.status(500);
+    res.send('Fail to process request');
+  }
+});
+
+app.get('/api/friend/all', async (req, res) => {
+  //TODO: Add auth check in prod
+  try {
+    const users = await db.users.getAllFriend(req.user.id);
+    res.status(200);
+    res.send(users);
+  } catch(e) {
+    console.log('Error: ', e);
+    res.status(500);
+    res.send('Fail to get friends');
+  }
+});
 
 app.listen(5000, function () {
   console.log('Example app listening on port 5000!');

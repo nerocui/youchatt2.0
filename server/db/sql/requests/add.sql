@@ -1,3 +1,3 @@
-INSERT INTO requests(id, from_user_id, to_user_id)
-VALUE($1, $2, $3)
+INSERT INTO requests(id, to_user_id)
+VALUES($1, $2)
 RETURNING *

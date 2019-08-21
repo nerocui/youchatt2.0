@@ -1,7 +1,7 @@
 import {IDatabase, IMain, ColumnSet} from 'pg-promise';
 import {IResult} from 'pg-promise/typescript/pg-subset';
 import {users as sql, friends as friends_sql} from '../sql';
-import { UserModel } from '../../types';
+import { UserModel, RelationshipModel } from '../../types';
 
 export class UsersRepository {
 
@@ -81,6 +81,18 @@ export class UsersRepository {
     async addFriend(user_id: string, friend_id: string) {
         this.db.none(friends_sql.add, [user_id, friend_id]);
         return this.db.one('SELECT * FROM users WHERE id = $1', friend_id);
+    }
+
+    async getAllFriend(user_id: string) {
+        const relationships: Array<RelationshipModel> = await this.db.any('SELECT * FROM friends WHERE user_id = $1 OR friend_id = $1', user_id);
+        const friends = relationships.map(rel => {
+            if (rel.friend_id === user_id) {
+                return rel.user_id;
+            } else {
+                return rel.friend_id;
+            }
+        });
+        return this.db.any('SELECT * FROM users WHERE id IN ($1:csv)', friends);
     }
 
     async removeFriend(user_id: string, friend_id: string) {
