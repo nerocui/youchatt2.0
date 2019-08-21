@@ -1,11 +1,19 @@
 import React from 'react';
+import SearchResult from '../components/cards/SearchResult';
+import { connect } from 'react-redux';
 
-const SearchPage = () => {
+const SearchPage = ({results}) => {
 	return (
-		<div>
-			Search Page
+		<div className='page'>
+			{results.map(res => <SearchResult {...res}/>)}
 		</div>
 	);
 }
 
-export default SearchPage;
+function mapStateToProps(state) {
+	return {
+		results: state.contactSearchState.results
+	};
+}
+
+export default connect(mapStateToProps)(SearchPage);

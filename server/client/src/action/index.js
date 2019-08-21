@@ -1,5 +1,10 @@
 import * as TYPE from './type';
 import axios from 'axios';
+import * as algoliasearch from 'algoliasearch';
+import keys from '../keys/api_keys';
+
+const client = algoliasearch(keys.algoliaApplicationID, keys.algoliaSearchKey);
+const index = client.initIndex('dev_USERS');
 
 function setAuthInfoAction(user) {
 	return {
@@ -16,6 +21,26 @@ export function updateAuthInfo() {
 		).then(res => {
 			dispatch(setAuthInfoAction(res.data));
 		});
+	};
+}
+
+function setSearchResult(res) {
+	return {
+		type: TYPE.SEARCH_CONTACTS,
+		payload: res
+	};
+}
+
+export function searchContacts(term) {
+	return dispatch => {
+		index.search({query: term})
+			.then(({ hits }) => {
+				console.log("hits: ", hits);
+				dispatch(setSearchResult(hits));
+			})
+			.catch(e => {
+				console.log('errors: ', e);
+			});
 	};
 }
 

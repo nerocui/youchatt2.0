@@ -1,22 +1,22 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import TopAppBar from './AppBar';
+import SearchBar from './SearchBar';
 import PrivateRoute from '../../routes/PrivateRoute';
 import PublicRedirectRoute from '../../routes/PublicRedirectRoute';
 
 class DynamicAppBar extends React.Component {
 	render() {
+		console.log('getting new route');
 		return (
-			<Router>
-				<Switch>
-					<PublicRedirectRoute exact path='/' component={TopAppBar} />
-					<PrivateRoute exact path='/main' component={TopAppBar} />
-					<PrivateRoute exact path='/contacts' component={TopAppBar} />
-					<PrivateRoute exact path='/search' component={TopAppBar} />
-					<PrivateRoute exact path='/requests' component={TopAppBar} />
-					<PrivateRoute exact path='/thread' component={TopAppBar} />
-				</Switch>
-			</Router>
+			<Switch>
+				<PublicRedirectRoute exact path='/' component={TopAppBar} />
+				<PrivateRoute exact path='/main' component={TopAppBar} />
+				<PrivateRoute exact path='/contacts' component={TopAppBar} />
+				<PrivateRoute exact path='/search' component={SearchBar} />
+				<PrivateRoute exact path='/requests' component={TopAppBar} />
+				<PrivateRoute exact path='/thread' component={TopAppBar} />
+			</Switch>
 		);
 	}
 }

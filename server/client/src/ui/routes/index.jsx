@@ -40,7 +40,7 @@ class App extends React.Component {
 		return (
 			<Router>
 				<div>
-					<DynamicAppBar openSideMenu={this.openSideBar} />
+					<DynamicAppBar />
 					<SideMenu open={this.state.sideBarOpen} closeSideBar={this.closeSideBar} />
 					<Paper className="page--container">
 						<Switch>
