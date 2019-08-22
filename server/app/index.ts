@@ -8,6 +8,8 @@ import { key } from '../config/api_key';
 import { db } from '../db';
 import { UserModel, RequestModel } from '../types';
 import * as algoliasearch from 'algoliasearch';
+import * as firebaseAdmin from 'firebase-admin';
+
 
 // Create a new express application instance
 const app: express.Application = express();
@@ -15,6 +17,11 @@ db.users.init();
 db.requests.create();
 const client = algoliasearch(key.algoliaApplicationID, key.algoliaAdminKey);
 const index = client.initIndex('dev_USERS');
+var serviceAccount = require("../config/basicchat-dev-firebase-adminsdk-22jr8-c9fe2295e6.json");
+
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert(serviceAccount),
+});
 
 passport.serializeUser((user: UserModel, done: any) => {
   done(null, user.id);
@@ -173,6 +180,25 @@ app.get('/api/friend/all', async (req, res) => {
     res.send('Fail to get friends');
   }
 });
+
+const message = {
+  data: {
+    hello: 'world',
+  },
+  notification: {
+    "title": "Firebase",
+    "body": "Firebase is awesome",
+  },
+  token: '<-->Insert Your Token Here<-->'
+};
+
+app.get('/api/message/send', (req, res) => {
+  firebaseAdmin.messaging().send(message)
+    .then(mes => {
+      console.log('messages were sent: ', mes);
+      res.send(mes);
+    });
+})
 
 app.listen(5000, function () {
   console.log('Example app listening on port 5000!');

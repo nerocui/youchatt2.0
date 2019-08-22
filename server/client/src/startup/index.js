@@ -1,6 +1,8 @@
+import * as firebase from "firebase/app";
+import 'firebase/messaging';
+import * as serviceworker from '../serviceWorker';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as serviceWorker from '../serviceWorker';
 import App from '../ui/routes';
 import rootReducer from '../reducer';
 import { Provider } from 'react-redux';
@@ -9,6 +11,12 @@ import { dbStartUp } from './db';
 import ReduxPromise from 'redux-promise';
 import ReduxThunk from 'redux-thunk';
 import LoadingPage from '../ui/pages/LoadingPage';
+import firebaseConfig from '../keys/fire_base_key';
+
+if (!firebase.apps.length) {
+	firebase.initializeApp(firebaseConfig);
+}
+export const firebaseMessaging = firebase.messaging();
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(createStore);
 
@@ -50,7 +58,7 @@ export function renderApp(store) {
 		),
 		document.getElementById('root')
 	);
-	serviceWorker.unregister();
+	serviceworker.register();
 }
 
 export function startUp() {
@@ -58,7 +66,23 @@ export function startUp() {
 	//load local storage
 	//initialize initial state with local storage
 	//load middleware, thunks
-
+	firebaseMessaging.requestPermission()
+		.then(() => {
+			console.log('have permission');
+			firebaseMessaging.getToken()
+				.then(res => {
+					console.log('token: ', res);
+				})
+				.catch(e => {
+					console.log('error: ', e);
+				});
+		})
+		.catch(e => {
+			console.log('no permission');
+		});
+	firebaseMessaging.onMessage(payload => {
+		console.log(payload);
+	});
 	ReactDOM.render(
 		(
 			<LoadingPage />
