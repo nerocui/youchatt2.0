@@ -12,7 +12,11 @@ class PublicRedirectRoute extends Component {
 	renderRoute() {
 		const COMPONENT = this.props.component;
 		if (this.props.loggedIn) {
-			return <Redirect to="/main" />;
+			if (this.props.user.message_token && this.props.user.message_token !== '') {
+				return <Redirect to="/main" />;
+			} else {
+				return <Redirect to='/allowpermission' />;
+			}
 		} else {
 			return <COMPONENT />;
 		}
@@ -29,7 +33,8 @@ class PublicRedirectRoute extends Component {
 
 function mapStateToProps(state) {
 	return {
-		loggedIn: state.authState.loggedIn
+		loggedIn: state.authState.loggedIn,
+		user: state.authState.user,
 	};
 }
 

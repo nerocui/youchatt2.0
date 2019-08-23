@@ -15,7 +15,19 @@ export function dbStartUp() {
 		.addColumn('last_name', lf.Type.STRING)
 		.addColumn('initials', lf.Type.STRING)
 		.addColumn('profile_pic', lf.Type.STRING)
-		.ddPrimaryKey(['id']);
+		.addPrimaryKey(['id']);
+
+	schemaBuilder.createTable(DB_CONFIG.PROFILE_DB_NAME)
+		.addColumn('id', lf.Type.STRING)
+		.addColumn('username', lf.Type.STRING)
+		.addColumn('first_name', lf.Type.STRING)
+		.addColumn('last_name', lf.Type.STRING)
+		.addColumn('initials', lf.Type.STRING)
+		.addColumn('profile_pic', lf.Type.STRING)
+		.addColumn('logged_in', lf.Type.BOOLEAN)
+		.addColumn('message_token', lf.Type.STRING)
+		.addPrimaryKey(['id']);
+	
 
 	schemaBuilder.createTable(DB_CONFIG.THREAD_DB_NAME)
 		.addColumn('id', lf.Type.STRING)

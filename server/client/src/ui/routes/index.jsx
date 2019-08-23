@@ -11,6 +11,7 @@ import MomentsPage from '../pages/MomentsPage';
 import ProfilePage from '../pages/ProfilePage';
 import RequestsPage from '../pages/RequestsPage';
 import SearchPage from '../pages/SearchPage';
+import AllowPermissionPage from '../pages/AllowPermissionPage';
 import PrivateRoute from "./PrivateRoute";
 import DynamicAppBar from '../components/appbar/DynamicAppBar';
 import SideMenu from '../components/sidemenu/SideMenu';
@@ -46,6 +47,7 @@ class App extends React.Component {
 						<Switch>
 							<PublicRedirectRoute exact path='/' component={LoginPage} />
 							<PrivateRoute exact path='/main' component={MainPage} />
+							<PrivateRoute exact path='/allowpermission' component={AllowPermissionPage} />
 							<PrivateRoute exact path='/contacts' component={ContactsPage} />
 							<PrivateRoute exact path='/search' component={SearchPage} />
 							<PrivateRoute exact path='/requests' component={RequestsPage} />

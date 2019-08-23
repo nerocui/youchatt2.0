@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS users
 	first_name text NOT NULL,
 	last_name text NOT NULL,
 	initials text NOT NULL,
-	profile_pic text NOT NULL
+	profile_pic text NOT NULL,
+	message_token text
 )

@@ -109,6 +109,10 @@ export class UsersRepository {
         //TODO: need to unify user relationship instead of user vs. friend
         return this.db.one('SELECT * FROM users WHERE id = $1', friend_id);
     }
+
+    async updateMessageToken(user_id: string, message_token: string) {
+        this.db.none('UPDATE users SET message_token = $1 WHERE id = $2', [message_token, user_id]);
+    }
 	
 	userModelToArray(user: UserModel): Array<string> {
 		return [
@@ -118,7 +122,8 @@ export class UsersRepository {
 			user.first_name,
 			user.last_name,
 			user.initials,
-			user.profile_pic,
+            user.profile_pic,
+            user.message_token,
 		];
 	}
 

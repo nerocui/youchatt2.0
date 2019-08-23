@@ -11,6 +11,7 @@ class DynamicAppBar extends React.Component {
 		return (
 			<Switch>
 				<PublicRedirectRoute exact path='/' component={TopAppBar} />
+				<PrivateRoute exact path='/allowpermission' component={TopAppBar} />
 				<PrivateRoute exact path='/main' component={TopAppBar} />
 				<PrivateRoute exact path='/contacts' component={TopAppBar} />
 				<PrivateRoute exact path='/search' component={SearchBar} />

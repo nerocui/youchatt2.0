@@ -1,5 +1,3 @@
-import * as firebase from "firebase/app";
-import 'firebase/messaging';
 import * as serviceworker from '../serviceWorker';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -11,16 +9,13 @@ import { dbStartUp } from './db';
 import ReduxPromise from 'redux-promise';
 import ReduxThunk from 'redux-thunk';
 import LoadingPage from '../ui/pages/LoadingPage';
-import firebaseConfig from '../keys/fire_base_key';
-
-if (!firebase.apps.length) {
-	firebase.initializeApp(firebaseConfig);
-}
-export const firebaseMessaging = firebase.messaging();
+import FirebaseHelper from './firebase';
+import Profile from '../model/Profile';
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(createStore);
+export let firebaseHelper;
 
-function loadInitialState() {
+async function loadInitialState() {
 	let state = {},
 		authState = {},
 		contactState = {},
@@ -35,6 +30,15 @@ function loadInitialState() {
 	uiState = {
 		sideMenuOpen: false,
 	}
+
+	try {
+		const profile = await Profile.getCurrentProfile();
+		authState = Object.assign({}, authState,{ user: profile});
+	} catch(e) {
+		//user is not logged in, just console log it for now
+		console.log(e);
+	}
+	
 	state = {
 		authState,
 		contactState,
@@ -61,28 +65,13 @@ export function renderApp(store) {
 	serviceworker.register();
 }
 
-export function startUp() {
+export async function startUp() {
 	//if is online, load new in the background with callback for updating local db
 	//load local storage
 	//initialize initial state with local storage
 	//load middleware, thunks
-	firebaseMessaging.requestPermission()
-		.then(() => {
-			console.log('have permission');
-			firebaseMessaging.getToken()
-				.then(res => {
-					console.log('token: ', res);
-				})
-				.catch(e => {
-					console.log('error: ', e);
-				});
-		})
-		.catch(e => {
-			console.log('no permission');
-		});
-	firebaseMessaging.onMessage(payload => {
-		console.log(payload);
-	});
+	firebaseHelper = new FirebaseHelper();
+
 	ReactDOM.render(
 		(
 			<LoadingPage />
@@ -96,6 +85,4 @@ export function startUp() {
 	);
 
 	setTimeout(() => renderApp(store), 300);
-	
-	
 }

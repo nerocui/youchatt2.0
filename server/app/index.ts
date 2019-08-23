@@ -56,6 +56,7 @@ passport.use(
           last_name: profile.name.familyName,
           initials: profile.name.givenName[0] + profile.name.familyName[0],
           profile_pic: profile.photos[0].value,
+          message_token: '',
         };
         db.users.add(user)
           .then(user => {
@@ -174,6 +175,24 @@ app.get('/api/friend/all', async (req, res) => {
     const users = await db.users.getAllFriend(req.user.id);
     res.status(200);
     res.send(users);
+  } catch(e) {
+    console.log('Error: ', e);
+    res.status(500);
+    res.send('Fail to get friends');
+  }
+});
+
+app.post('/api/users/set_message_token', async (req, res) => {
+  //TODO: Add auth check in prod
+  const {id, message_token} = req.query;
+  if (!(id && message_token)) {
+    res.status(400);
+    res.send('Bad Request');
+  }
+  try {
+    db.users.updateMessageToken(id, message_token);
+    res.status(200);
+    res.send('message token set');
   } catch(e) {
     console.log('Error: ', e);
     res.status(500);

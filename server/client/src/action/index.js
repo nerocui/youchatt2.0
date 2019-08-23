@@ -2,6 +2,8 @@ import * as TYPE from './type';
 import axios from 'axios';
 import * as algoliasearch from 'algoliasearch';
 import keys from '../keys/api_keys';
+import Profile from '../model/Profile';
+import { firebaseHelper } from '../startup';
 
 const client = algoliasearch(keys.algoliaApplicationID, keys.algoliaSearchKey);
 const index = client.initIndex('dev_USERS');
@@ -59,6 +61,7 @@ function setSentRequest(res) {
 }
 
 export function sendRequest(to_user_id) {
+	console.log('setting token');
 	return dispatch => {
 		axios.post('/api/request/add', null, {params: {to_user_id}})
 			.then(res => {
@@ -69,6 +72,22 @@ export function sendRequest(to_user_id) {
 			.catch(e => {
 				console.log('could not send request: ', e);
 			});
+	};
+}
+
+function updateProfileToken(message_token) {
+	return {
+		type: TYPE.SET_PROFILE_MESSAGE_TOKEN,
+		payload: message_token,
+	};
+}
+
+export function setProfileMessageToken(id) {
+	return async (dispatch) => {
+		const message_token = await firebaseHelper.rquestPermission();
+		console.log("got back the token: ", message_token);
+		Profile.setMessageToken(id, message_token);
+		dispatch(updateProfileToken(message_token));
 	};
 }
 

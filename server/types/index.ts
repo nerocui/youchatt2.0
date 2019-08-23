@@ -6,6 +6,7 @@ export type UserModel = {
 	last_name: string,
 	initials: string,
 	profile_pic: string,
+	message_token: string,
 };
 
 export type RequestModel = {
