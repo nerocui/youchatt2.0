@@ -24,7 +24,7 @@ export default class FirebaseHelper {
 	}
 
 	setMessageHandler(handler) {
-		this.messaging.onMessage = handler;
+		this.messaging.onMessage(handler);
 	}
 }
 
