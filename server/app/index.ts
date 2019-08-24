@@ -120,7 +120,22 @@ app.post('/api/request/add', (req, res) => {
     to_user_id,
   };
   db.requests.add(request)
-    .then(request => {
+    .then(async request => {
+      const to_user: UserModel = await db.users.findById(to_user_id);
+      const message = {
+        data: {
+          "url": `/request/${request.id}?user_id=${to_user.id}&username=${to_user.username}`,
+        },
+        notification: {
+          "title": `You got a friend request`,
+          "body": `You got a friend request from ${to_user.username}`,
+        },
+        token: to_user.message_token
+      };
+      firebaseAdmin.messaging().send(message)
+        .then(mes => {
+          console.log('messages were sent: ', mes);
+        });
       res.status(201);
       res.send(request);
     }).catch(e => {

@@ -71,7 +71,9 @@ export async function startUp() {
 	//initialize initial state with local storage
 	//load middleware, thunks
 	firebaseHelper = new FirebaseHelper();
-
+	firebaseHelper.setMessageHandler(res => {
+		console.log(res);
+	});
 	ReactDOM.render(
 		(
 			<LoadingPage />
