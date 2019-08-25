@@ -11,7 +11,7 @@ export default function initPassport(searchEngine: SearchEngine, db: ExtendedPro
 	);
 	passport.deserializeUser(
 		async (id: string, done: any) => {
-			const user = await this.db.users.findById(id);
+			const user = await db.users.findById(id);
 			done(null, user);
 		}
 	);
