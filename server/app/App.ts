@@ -65,7 +65,9 @@ export default class App {
 
 	public init() {
 		this.initDB();
-		this.initAuth([googleStrategy(this.searchEngine.userIndex, this.db)]);
+		this.initAuth([
+			googleStrategy(this.searchEngine.userIndex, this.db),
+		]);
 		return this;
 	}
 
