@@ -12,10 +12,11 @@ const appOption: AppOption = {
   features: [],
 };
 const app: App = new App(appOption, db, searchEngine);
-app.addMiddleware(...middlewares);
 const userRouter: UserRouter = new UserRouter(db);
 const requestRouter: RequestRouter = new RequestRouter(db);
-app.addRoute('/api', userRouter.router);
-app.addRoute('/api', requestRouter.router);
-app.init();
-app.run();
+app.addMiddleware(...middlewares)
+   .addRoute('/api', userRouter.router)
+   .addRoute('/api', requestRouter.router)
+   .init()
+   .run();
+

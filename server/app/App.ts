@@ -20,10 +20,12 @@ export default class App {
 
 	public addMiddleware(...handlers: express.RequestHandler[]) {
 		this.app.use(...handlers);
+		return this;
 	}
 
 	public addRoute(route: string, handler: express.RequestHandler) {
 		this.app.use(route, handler);
+		return this;
 	}
 
 	private initAuth(authStrategies: Array<any>) {
@@ -64,7 +66,7 @@ export default class App {
 	public init() {
 		this.initDB();
 		this.initAuth([googleStrategy(this.searchEngine.userIndex, this.db)]);
-
+		return this;
 	}
 
 	public run() {
