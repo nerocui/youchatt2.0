@@ -1,4 +1,5 @@
 import * as cookieSession from 'cookie-session';
+import * as passport from 'passport';
 import { key } from '../config/api_key';
 
 const useCookie = cookieSession({
@@ -6,6 +7,11 @@ const useCookie = cookieSession({
 	keys: [key.cookieKey]
 });
 
+const initPassport = passport.initialize();
+const passportSession = passport.session();
+
 export default [
 	useCookie,
+	initPassport,
+	passportSession,
 ];

@@ -13,7 +13,7 @@ const option = {
 const handler = (index: algoliasearch.Index, db: ExtendedProtocol) => async (accessToken, refreshToken, profile, done) => {
 	const existUser = await db.users.findByEmail(profile.emails[0].value);
 	if (existUser) {
-		console.log(existUser);
+		console.log('user exist');
 		done(null, existUser);
 	} else {
 		console.log('lets create a user');

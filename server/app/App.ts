@@ -1,13 +1,10 @@
 import * as express from 'express';
 import { AppOption } from '../types';
-import PassportAuth from '../middleware/auth';
-import { UserModel, ExtendedProtocol, SearchEngine } from '../types';
-import googleStrategy from '../middleware/strategies/google';
+import { ExtendedProtocol, SearchEngine } from '../types';
 
 export default class App {
 	private app: express.Application;
 	private port: number;
-	private passportAuth: PassportAuth;
 	private db: ExtendedProtocol;
 	private searchEngine: SearchEngine;
 
@@ -28,36 +25,6 @@ export default class App {
 		return this;
 	}
 
-	private initAuth(authStrategies: Array<any>) {
-		const passportAuth = new PassportAuth(this.app);
-		passportAuth.addUserSerializer(
-		(user: UserModel, done: any) => {
-			done(null, user.id);
-		});
-		passportAuth.addUserDeserializer(
-		async (id: string, done: any) => {
-			this.db.users.findById(id)
-				.then(user => {
-				done(null, user);
-				});
-			}
-		);
-		for (let i = 0; i < authStrategies.length; i++) {
-			passportAuth.addStrategy(authStrategies[i]);
-			//passportAuth.addStrategy(googleStrategy(index));
-		}
-		passportAuth.init();
-		this.app.get('/auth/google', passportAuth.authenticator('google', {scope: ['profile', 'email']}));
-		this.app.get(
-			'/auth/google/callback',
-			passportAuth.callbackHandler('google'),
-			(req, res) => {
-				res.redirect('/main');
-			}
-		);
-		this.passportAuth = passportAuth;
-	}
-
 	private initDB() {
 		this.db.users.init();
 		this.db.requests.create();
@@ -65,9 +32,6 @@ export default class App {
 
 	public init() {
 		this.initDB();
-		this.initAuth([
-			googleStrategy(this.searchEngine.userIndex, this.db),
-		]);
 		return this;
 	}
 

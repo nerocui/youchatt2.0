@@ -16,6 +16,7 @@ class UserRouter {
 	}
 
 	private getCurrentUser(req: Request, res: Response) {
+		console.log('getting called: ', req.user);
 		res.send(req.user);
 	}
 	
