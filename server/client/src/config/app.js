@@ -1,16 +1,18 @@
 export const APP_NAME = "YouChatt";
-const MESSAGE_DB_NAME = "DB.Messages";
-const THREAD_DB_NAME = "DB.Threads";
-const MESSAGE_USER_REL_DB_NAME = "DB.MessagesUserRead";
-const USER_DB_NAME = "DB.Users";
-const PROFILE_DB_NAME = "DB.Profiles";
-const THREAD_USER_REL_DB_NAME = "DB.ThreadUser";
-const THREAD_USER_REL_DEL_DB_NAME = "DB.ThreadDelUser";
-const MESSAGE_THREAD_REL_DB_NAME = "DB.MessageThread";
+const MESSAGE_DB_NAME = "DB_Messages";
+const REQUEST_DB_NAME = "DB_Requests";
+const THREAD_DB_NAME = "DB_Threads";
+const MESSAGE_USER_REL_DB_NAME = "DB_MessagesUserRead";
+const USER_DB_NAME = "DB_Users";
+const PROFILE_DB_NAME = "DB_Profiles";
+const THREAD_USER_REL_DB_NAME = "DB_ThreadUser";
+const THREAD_USER_REL_DEL_DB_NAME = "DB_ThreadDelUser";
+const MESSAGE_THREAD_REL_DB_NAME = "DB_MessageThread";
 
 
 export const DB_CONFIG = {
 	MESSAGE_DB_NAME,
+	REQUEST_DB_NAME,
 	PROFILE_DB_NAME,
 	THREAD_DB_NAME,
 	MESSAGE_USER_REL_DB_NAME,

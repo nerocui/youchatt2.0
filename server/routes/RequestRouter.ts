@@ -1,16 +1,14 @@
 import { Router, Request, Response } from 'express';
-import { ExtendedProtocol, RequestModel, UserModel } from '../types';
+import { RequestModel, UserModel } from '../types';
 import * as uniqid from 'uniqid';
+import { db } from '../db';
 import * as firebaseAdmin from 'firebase-admin';
 
 class RequestRouter {
 	public router: Router;
-	private db: ExtendedProtocol;
 
-	constructor(db: ExtendedProtocol) {
-		this.db = db;
+	constructor() {
 		this.router = Router();
-
 		this.router.post('/request/add', this.addRequest);
 		this.router.post('/request/accept', this.acceptRequest);
 		this.router.post('/request/decline', this.declineRequest);
@@ -27,16 +25,22 @@ class RequestRouter {
 			id: uniqid(),
 			to_user_id,
 		};
-		const newRequest = await this.db.requests.add(request);
+		const newRequest = await db.requests.add(request);
 		try {
-			const to_user: UserModel = await this.db.users.findById(to_user_id);
+			const to_user: UserModel = await db.users.findById(to_user_id);
 			const message = {
 				data: {
-					"url": `/request/${newRequest.id}?user_id=${to_user.id}&username=${to_user.username}`,
+					"type": "FRIEND_REQUEST",
+					"request_id": `${newRequest.id}`,
+					"from_user_id": `${req.user.id}`,
+					"from_user_name": `${req.user.username}`,
+					"from_user_pic": `${req.user.profile_pic}`,
+					"to_user_id": `${to_user_id}`,
+					"read": "false",
 				},
 				notification: {
 					"title": `You got a friend request`,
-					"body": `You got a friend request from ${to_user.username}`,
+					"body": `You got a friend request from ${req.user.username}`,
 				},
 				token: to_user.message_token
 			};
@@ -59,9 +63,9 @@ class RequestRouter {
 		}
 		let request: RequestModel;
 		try {
-			request = await this.db.requests.getOneWithId(id);
-			const user: UserModel = await this.db.users.addFriend(req.user.id, request.to_user_id);
-			this.db.requests.remove(id);
+			request = await db.requests.getOneWithId(id);
+			const user: UserModel = await db.users.addFriend(req.user.id, request.to_user_id);
+			db.requests.remove(id);
 			res.status(201);
 			res.send(user);
 		} catch(e) {
@@ -78,7 +82,7 @@ class RequestRouter {
 			res.send('Bad Request');
 		}
 		try {
-			this.db.requests.remove(id);
+			db.requests.remove(id);
 			res.status(201);
 			res.send('Removed Request');
 		} catch(e) {

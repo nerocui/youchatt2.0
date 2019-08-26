@@ -8,6 +8,14 @@ export const schemaBuilder = lf.schema.create(APP_NAME, 1);
 console.log('schemabuilder is: ', schemaBuilder);
 
 export function dbStartUp() {
+	schemaBuilder.createTable(DB_CONFIG.REQUEST_DB_NAME)
+		.addColumn('id', lf.Type.STRING)
+		.addColumn('from_user_id', lf.Type.STRING)
+		.addColumn('from_user_name', lf.Type.STRING)
+		.addColumn('from_user_pic', lf.Type.STRING)
+		.addColumn('read', lf.Type.BOOLEAN)
+		.addPrimaryKey(['id']);
+
 	schemaBuilder.createTable(DB_CONFIG.USER_DB_NAME)
 		.addColumn('id', lf.Type.STRING)
 		.addColumn('username', lf.Type.STRING)
@@ -47,7 +55,7 @@ export function dbStartUp() {
 		})
 		.addForeignKey('fk_userId', {
 			local: 'user_id',
-			ref: `${DB_CONFIG.US.ER_DB_NAME}`.id,
+			ref: `${DB_CONFIG.USER_DB_NAME}.id`,
 			action: lf.ConstraintAction.CASCADE,
 			timing: lf.ConstraintTiming.IMMEDIATE
 		})
@@ -65,7 +73,7 @@ export function dbStartUp() {
 		})
 		.addForeignKey('fk_user_id', {
 			local: 'user_id',
-			ref: `${DB_CONFIG.USER_DB_NAME}`.id,
+			ref: `${DB_CONFIG.USER_DB_NAME}.id`,
 			action: lf.ConstraintAction.CASCADE,
 			timing: lf.ConstraintTiming.IMMEDIATE
 		})

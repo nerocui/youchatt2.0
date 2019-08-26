@@ -14,7 +14,7 @@ const appOption: AppOption = {
 };
 const app: App = new App(appOption, db, searchEngine);
 const userRouter: UserRouter = new UserRouter(db);
-const requestRouter: RequestRouter = new RequestRouter(db);
+const requestRouter: RequestRouter = new RequestRouter();
 const authRouter: AuthRouter = new AuthRouter();
 app.addMiddleware(...middlewares)
    .addRoute('/api', userRouter.router)

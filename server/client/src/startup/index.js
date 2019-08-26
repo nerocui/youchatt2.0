@@ -11,6 +11,8 @@ import ReduxThunk from 'redux-thunk';
 import LoadingPage from '../ui/pages/LoadingPage';
 import FirebaseHelper from './firebase';
 import Profile from '../model/Profile';
+import notificationHandler from '../utils/notification/handler';
+import Request from '../model/Request';
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(createStore);
 export let firebaseHelper;
@@ -33,7 +35,9 @@ async function loadInitialState() {
 
 	try {
 		const profile = await Profile.getCurrentProfile();
+		const requests = await Request.getAllRequest(profile.id);
 		authState = Object.assign({}, authState,{ user: profile});
+		requestState = Object.assign({}, requestState, { requests });
 	} catch(e) {
 		//user is not logged in, just console log it for now
 		console.log(e);
@@ -70,10 +74,10 @@ export async function startUp() {
 	//load local storage
 	//initialize initial state with local storage
 	//load middleware, thunks
+	dbStartUp();
 	firebaseHelper = new FirebaseHelper();
-	firebaseHelper.setMessageHandler(res => {
-		console.log(res);
-	});
+	firebaseHelper.setMessageHandler(notificationHandler);
+	
 	ReactDOM.render(
 		(
 			<LoadingPage />
@@ -86,5 +90,5 @@ export async function startUp() {
 		loadInitialState(),
 	);
 
-	setTimeout(() => renderApp(store), 300);
+	setTimeout(() => renderApp(store), 3000);
 }
