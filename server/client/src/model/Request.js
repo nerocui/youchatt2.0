@@ -1,6 +1,6 @@
 import lf from 'lovefield';
-import { schemaBuilder } from '../startup/db';
 import { DB_CONFIG } from '../config/app';
+import { db } from '../startup';
 import isOnline from 'is-online';
 import Axios from 'axios';
 
@@ -15,14 +15,7 @@ export default class Request {
 	}
 
 	static async saveRequest(request) {
-		let db, Requests;
-		try {
-			db = await schemaBuilder.connect();
-			Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
-		} catch(e) {
-			Requests = await schemaBuilder.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
-		}
-		
+		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
 		try {
 			await db.insert().into(Requests).values(request);
 		} catch(e) {
@@ -31,7 +24,6 @@ export default class Request {
 	}
 
 	static async readRequest(id) {
-		const db = await schemaBuilder.connect();
 		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
 		try {
 			await db.update(Requests).set(Requests.read, true).where(Requests.id.eq(id));
@@ -42,7 +34,6 @@ export default class Request {
 	}
 
 	static async getAllRequest(to_user_id) {
-		const db = await schemaBuilder.connect();
 		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
 		try {
 			const requests = await db.select().from(Requests).where(Requests.to_user_id.eq(to_user_id));

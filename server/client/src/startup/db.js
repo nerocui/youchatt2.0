@@ -1,13 +1,7 @@
+import { DB_CONFIG } from '../config/app';
 import lf from 'lovefield';
-import { APP_NAME, DB_CONFIG } from '../config/app';
 
-
-console.log('lf is: ', lf);
-export const schemaBuilder = lf.schema.create(APP_NAME, 1);
-
-console.log('schemabuilder is: ', schemaBuilder);
-
-export function dbStartUp() {
+export function dbStartUp(schemaBuilder) {
 	schemaBuilder.createTable(DB_CONFIG.REQUEST_DB_NAME)
 		.addColumn('id', lf.Type.STRING)
 		.addColumn('from_user_id', lf.Type.STRING)

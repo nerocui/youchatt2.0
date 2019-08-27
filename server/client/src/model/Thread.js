@@ -1,5 +1,5 @@
 import lf from 'lovefield';
-import { schemaBuilder } from '../startup/db';
+import { db } from '../startup';
 import { DB_CONFIG } from '../config/app';
 
 export default class Thread {
@@ -11,7 +11,6 @@ export default class Thread {
 	}
 
 	static async allFromDb() {
-		const db = await schemaBuilder.connect();
 		const Threads = db.getSchema().table(DB_CONFIG.THREAD_DB_NAME);
 		const threads =  await db.select()
 						   		 .from(Threads)

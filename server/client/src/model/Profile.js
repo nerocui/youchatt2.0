@@ -1,6 +1,6 @@
 import lf from 'lovefield';
-import { schemaBuilder } from '../startup/db';
 import { DB_CONFIG } from '../config/app';
+import { db } from '../startup';
 import isOnline from 'is-online';
 import Axios from 'axios';
 
@@ -17,7 +17,6 @@ export default class Profile {
 	}
 
 	static async setMessageToken(id, message_token) {
-		const db = await schemaBuilder.connect();
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
 		try {
 			Axios.post('/api/users/set_message_token', null, {params: {id, message_token}})
@@ -37,7 +36,6 @@ export default class Profile {
 	}
 
 	static async allowPermission(id) {
-		const db = await schemaBuilder.connect();
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
 		try {
 			const token = await db.select(Profiles.message_token).from(Profiles).where(Profiles.id.eq(id));
@@ -51,12 +49,21 @@ export default class Profile {
 	}
 
 	static async getCurrentProfile() {
-		const db = await schemaBuilder.connect();
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
 		if (await isOnline()) {
 			Axios.get('/api/current_user')
 				.then(async (res) => {
-					const profile = new Profile(...res.data, true);
+					const {
+						email,
+						first_name,
+						id,
+						initials,
+						last_name,
+						message_token,
+						profile_pic,
+						username,
+					} = res.data;
+					const profile = new Profile(email,first_name,id,initials,last_name,message_token,profile_pic,username,true);
 					//set this to the current logged in user, return it
 					const existingProfile = await db.select()
 													.from(Profiles)
@@ -71,7 +78,7 @@ export default class Profile {
 					return profile;
 				})
 				.catch(err => {
-					throw new Error("Not Logged In");
+					console.log("Is Online but Not Logged In", err);
 				})
 				.finally(() => {
 					db.close();
@@ -79,7 +86,7 @@ export default class Profile {
 		} else {
 			const loggedInUser = await db.select().from(Profiles).where(Profiles.logged_in.eq(true));
 			if (!loggedInUser) {
-				throw new Error("Not Logged In");
+				console.log("Not Logged In");
 			}
 			db.close();
 			return loggedInUser;
@@ -88,7 +95,6 @@ export default class Profile {
 
 	static async login(profile) {
 		//should only be called with login to server or switch user
-		const db = await schemaBuilder.connect();
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
 		const loggedInProfile = Object.assign({}, profile, {logged_in: true});
 		const existingProfile = await db.select()
@@ -106,7 +112,6 @@ export default class Profile {
 
 	static async logout() {
 		//should only be called with log out to server or switch user
-		const db = await schemaBuilder.connect();
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
 		db.update(Profiles).set(Profile.logged_in, false);
 	}

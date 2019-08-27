@@ -13,12 +13,18 @@ import FirebaseHelper from './firebase';
 import Profile from '../model/Profile';
 import notificationHandler from '../utils/notification/handler';
 import Request from '../model/Request';
+import lf from 'lovefield';
+import { APP_NAME } from '../config/app';
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(createStore);
 export let firebaseHelper;
+export let db;
+export const schemaBuilder = lf.schema.create(APP_NAME, 1);
 
-async function loadInitialState() {
-	let state = {},
+function loadInitialState(db_param) {
+	db = db_param;
+	return new Promise(async (resolve, reject) => {
+		let state = {},
 		authState = {},
 		contactState = {},
 		threadState = {},
@@ -29,32 +35,35 @@ async function loadInitialState() {
 		uiState = {},
 		settingState = {};
 
-	uiState = {
-		sideMenuOpen: false,
-	}
+		uiState = {
+			sideMenuOpen: false,
+		}
 
-	try {
-		const profile = await Profile.getCurrentProfile();
-		const requests = await Request.getAllRequest(profile.id);
-		authState = Object.assign({}, authState,{ user: profile});
-		requestState = Object.assign({}, requestState, { requests });
-	} catch(e) {
-		//user is not logged in, just console log it for now
-		console.log(e);
-	}
-	
-	state = {
-		authState,
-		contactState,
-		threadState,
-		messageState,
-		requestState,
-		momentState,
-		profileState,
-		uiState,
-		settingState,
-	};
-	return state;
+		try {
+			const profile = await Profile.getCurrentProfile();
+			const requests = await Request.getAllRequest(profile.id);
+			authState = Object.assign({}, authState,{ user: profile});
+			requestState = Object.assign({}, requestState, { requests });
+
+
+			state = {
+				authState,
+				contactState,
+				threadState,
+				messageState,
+				requestState,
+				momentState,
+				profileState,
+				uiState,
+				settingState,
+			};
+			resolve(state);
+		} catch(e) {
+			//user is not logged in, just console log it for now
+			console.log(e);
+			resolve(state);
+		}
+	});
 }
 
 export function renderApp(store) {
@@ -74,21 +83,29 @@ export async function startUp() {
 	//load local storage
 	//initialize initial state with local storage
 	//load middleware, thunks
-	dbStartUp();
-	firebaseHelper = new FirebaseHelper();
-	firebaseHelper.setMessageHandler(notificationHandler);
-	
 	ReactDOM.render(
 		(
 			<LoadingPage />
 		),
 		document.getElementById('root')
 	);
-
-	const store = createStoreWithMiddleware(
-		rootReducer,
-		loadInitialState(),
-	);
-
-	setTimeout(() => renderApp(store), 3000);
+	firebaseHelper = new FirebaseHelper();
+	firebaseHelper.setMessageHandler(notificationHandler);
+	dbStartUp(schemaBuilder);
+	console.log('got here at least');
+	schemaBuilder.connect()
+		.then(db => {
+			console.log('db is: ', db);
+			loadInitialState(db).then(initialState => {
+				const store = createStoreWithMiddleware(
+					rootReducer,
+					initialState,
+				);
+				renderApp(store);
+			});
+		})
+		.catch(e => {
+			console.log('here?');
+			console.log('has error!!!', e);
+		});
 }
