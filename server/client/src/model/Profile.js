@@ -25,9 +25,6 @@ export default class Profile {
 				})
 				.catch(e => {
 					console.log(e);
-				})
-				.finally(() => {
-					db.close();
 				});
 			
 		} catch(e) {
@@ -44,7 +41,6 @@ export default class Profile {
 		} catch(e) {
 			console.log(e);
 		}
-		db.close();
 		return false;
 	}
 
@@ -63,33 +59,31 @@ export default class Profile {
 						profile_pic,
 						username,
 					} = res.data;
-					const profile = new Profile(email,first_name,id,initials,last_name,message_token,profile_pic,username,true);
+					const profile = new Profile(id, username, first_name, last_name, initials, profile_pic, true, message_token);
 					//set this to the current logged in user, return it
-					const existingProfile = await db.select()
+					const existingProfileRows = await db.select()
 													.from(Profiles)
-													.where(Profiles.id.eq(profile.id));
-					if (!existingProfile) {
-						await db.update(Profiles).set(Profiles.logged_in, false);
-						await db.insert().into(Profiles).values(profile);
+													.where(Profiles.id.eq(profile.id)).exec();
+					if (!existingProfileRows || existingProfileRows.length === 0) {
+						const update = await db.update(Profiles).set(Profiles.logged_in, false);
+						const insert = await db.insert().into(Profiles).values(lf.bind(0));
+						update.exec();
+						insert.bind([[Profiles.createRow(profile)]]).exec();
 					} else {
-						await db.update(Profiles).set(Profiles.logged_in, false);
-						await db.update(Profiles).set(Profiles.logged_in, true).where(Profiles.id.eq(profile.id));
+						await db.update(Profiles).set(Profiles.logged_in, false).exec();
+						await db.update(Profiles).set(Profiles.logged_in, true).where(Profiles.id.eq(profile.id)).exec();
 					}
 					return profile;
 				})
 				.catch(err => {
 					console.log("Is Online but Not Logged In", err);
-				})
-				.finally(() => {
-					db.close();
 				});
 		} else {
-			const loggedInUser = await db.select().from(Profiles).where(Profiles.logged_in.eq(true));
-			if (!loggedInUser) {
+			const loggedInUserRow = await db.select().from(Profiles).where(Profiles.logged_in.eq(true)).exec();
+			if (!loggedInUserRow || loggedInUserRow.length === 0) {
 				console.log("Not Logged In");
 			}
-			db.close();
-			return loggedInUser;
+			return loggedInUserRow[0];
 		}
 	}
 
@@ -107,7 +101,6 @@ export default class Profile {
 			await db.update(Profiles).set(Profile.logged_in, false);
 			await db.update(Profiles).set(Profile.logged_in, true).where(Profiles.id.eq(loggedInProfile.id));
 		}
-		db.close();
 	}
 
 	static async logout() {

@@ -84,18 +84,14 @@ export async function startUp() {
 	//initialize initial state with local storage
 	//load middleware, thunks
 	ReactDOM.render(
-		(
-			<LoadingPage />
-		),
+		<LoadingPage />,
 		document.getElementById('root')
 	);
 	firebaseHelper = new FirebaseHelper();
 	firebaseHelper.setMessageHandler(notificationHandler);
 	dbStartUp(schemaBuilder);
-	console.log('got here at least');
 	schemaBuilder.connect()
 		.then(db => {
-			console.log('db is: ', db);
 			loadInitialState(db).then(initialState => {
 				const store = createStoreWithMiddleware(
 					rootReducer,
@@ -105,7 +101,6 @@ export async function startUp() {
 			});
 		})
 		.catch(e => {
-			console.log('here?');
-			console.log('has error!!!', e);
+			console.log(e);
 		});
 }
