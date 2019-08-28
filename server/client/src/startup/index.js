@@ -44,7 +44,7 @@ function loadInitialState(db_param) {
 			console.log('logged in profile: ', profile);
 			const requests = await Request.getAllRequest(profile.id);
 			console.log('some requets: ', requests);
-			authState = Object.assign({}, authState,{ user: profile});
+			authState = Object.assign({}, authState,{ user: profile, loggedIn: !!profile});
 			requestState = Object.assign({}, requestState, { requests });
 
 
@@ -95,6 +95,7 @@ export async function startUp() {
 	schemaBuilder.connect()
 		.then(db => {
 			loadInitialState(db).then(initialState => {
+				console.log('initial state', initialState);
 				const store = createStoreWithMiddleware(
 					rootReducer,
 					initialState,

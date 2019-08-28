@@ -112,6 +112,17 @@ export function setRequests(requests) {
 	};
 }
 
+export function requestsChangeHandler(changes) {
+	if (!changes||changes.length === 0) {
+		return;
+	}
+	const { object } = changes[0];
+	return dispatch => {
+		console.log('hello', object);
+		dispatch(setRequests(object));
+	};
+}
+
 export function chat(thread) {
 	return {
 		type: TYPE.CHAT,

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from 'react-redux';
-import { updateAuthInfo, setContacts, setRequests, setThreads, logout } from '../../action';
+import { updateAuthInfo, setContacts, setRequests, setThreads, logout, requestsChangeHandler } from '../../action';
+import { db } from '../../startup';
+import { DB_CONFIG } from '../../config/app';
 import PublicRedirectRoute from './PublicRedirectRoute';
 import ChatPage from '../pages/ChatPage';
 import ContactsPage from '../pages/ContactsPage';
@@ -28,6 +30,21 @@ class App extends React.Component {
 		this.closeSideBar = this.closeSideBar.bind(this);
 	}
 
+	componentDidMount() {
+		this.handleObservers();
+	}
+
+	async handleObservers() {
+		try {
+			const Requests = await db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
+			console.log('Requests Table is: ', Requests);
+			const query = await db.select().from(Requests).where(Requests.to_user_id.eq(this.props.user.id));
+			db.observe(query, this.props.requestsChangeHandler);
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
 	openSideBar() {
 		this.setState({sideBarOpen: true});
 	}
@@ -37,7 +54,6 @@ class App extends React.Component {
 	}
 
 	render() {
-		this.props.updateAuthInfo();
 		return (
 			<Router>
 				<div>
@@ -60,13 +76,20 @@ class App extends React.Component {
 	}
 }
 
+function mapStateToProps(state) {
+	return {
+		user: state.authState.user,
+	};
+}
+
 export default connect(
-	null,
+	mapStateToProps,
 	{
 		updateAuthInfo,
 		setContacts,
 		setRequests,
 		setRequests,
 		logout,
+		requestsChangeHandler,
 	}
 )(App);

@@ -97,7 +97,7 @@ function SideMenu({sideMenuOpen, requests = 0, closeSideMenu}) {
 		>
 		  <List>
 			{sideBarConfig.slice(0, devide).map(props => (
-				<ListItemLink {...props}/>
+				<ListItemLink {...props} key={props.label}/>
 			))}
 			<StyledBadge color="secondary" badgeContent={requests} invisible={requests===0}>
 				<ListItemLink {...requestConfig}/>
@@ -106,7 +106,7 @@ function SideMenu({sideMenuOpen, requests = 0, closeSideMenu}) {
 		  <Divider />
 		  <List>
 		  	{sideBarConfig.slice(devide, ).map(props => (
-				<ListItemLink {...props}/>
+				<ListItemLink {...props} key={props.label}/>
 			))}
 		  </List>
 		</div>
