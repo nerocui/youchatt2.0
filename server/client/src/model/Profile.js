@@ -21,7 +21,7 @@ export default class Profile {
 		try {
 			Axios.post('/api/users/set_message_token', null, {params: {id, message_token}})
 				.then(res => {
-					db.update(Profiles).set(Profiles.message_token, message_token).where(Profiles.id.eq(id));
+					db.update(Profiles).set(Profiles.message_token, message_token).where(Profiles.id.eq(id)).exec();
 				})
 				.catch(e => {
 					console.log(e);
@@ -35,9 +35,8 @@ export default class Profile {
 	static async allowPermission(id) {
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
 		try {
-			const token = await db.select(Profiles.message_token).from(Profiles).where(Profiles.id.eq(id));
-			db.close();
-			return token && token !== '';
+			const tokenRow = await db.select(Profiles.message_token).from(Profiles).where(Profiles.id.eq(id)).exec();
+			return tokenRow && tokenRow.length !== 0;
 		} catch(e) {
 			console.log(e);
 		}
@@ -47,7 +46,7 @@ export default class Profile {
 	static async getCurrentProfile() {
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
 		if (await isOnline()) {
-			Axios.get('/api/current_user')
+			return Axios.get('/api/current_user')
 				.then(async (res) => {
 					const {
 						email,
@@ -95,17 +94,18 @@ export default class Profile {
 										.from(Profiles)
 										.where(Profiles.id.eq(loggedInProfile.id));
 		if (!existingProfile) {
-			await db.update(Profiles).set(Profile.logged_in, false);
-			await db.insert().into(Profiles).values(loggedInProfile);
+			await db.update(Profiles).set(Profile.logged_in, false).exec();
+			const insert = await db.insert().into(Profiles).values(lf.bind(0));
+			insert.bind([[Profiles.createRow(loggedInProfile)]]).exec();
 		} else {
-			await db.update(Profiles).set(Profile.logged_in, false);
-			await db.update(Profiles).set(Profile.logged_in, true).where(Profiles.id.eq(loggedInProfile.id));
+			await db.update(Profiles).set(Profile.logged_in, false).exec();
+			await db.update(Profiles).set(Profile.logged_in, true).where(Profiles.id.eq(loggedInProfile.id)).exec();
 		}
 	}
 
 	static async logout() {
 		//should only be called with log out to server or switch user
 		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
-		db.update(Profiles).set(Profile.logged_in, false);
+		db.update(Profiles).set(Profile.logged_in, false).exec();
 	}
 }

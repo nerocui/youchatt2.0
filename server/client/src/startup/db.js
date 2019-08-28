@@ -7,6 +7,7 @@ export function dbStartUp(schemaBuilder) {
 		.addColumn('from_user_id', lf.Type.STRING)
 		.addColumn('from_user_name', lf.Type.STRING)
 		.addColumn('from_user_pic', lf.Type.STRING)
+		.addColumn('to_user_id', lf.Type.STRING)
 		.addColumn('read', lf.Type.BOOLEAN)
 		.addPrimaryKey(['id']);
 

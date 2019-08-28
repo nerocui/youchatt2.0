@@ -17,7 +17,8 @@ export default class Request {
 	static async saveRequest(request) {
 		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
 		try {
-			await db.insert().into(Requests).values(request);
+			const insert = await db.insert().into(Requests).values(lf.bind(0));
+			insert.bind([[Requests.createRow(request)]]).exec();
 		} catch(e) {
 			console.log(e);
 		}
@@ -26,11 +27,10 @@ export default class Request {
 	static async readRequest(id) {
 		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
 		try {
-			await db.update(Requests).set(Requests.read, true).where(Requests.id.eq(id));
+			await db.update(Requests).set(Requests.read, true).where(Requests.id.eq(id)).exec();
 		} catch(e) {
 			console.log(e);
 		}
-		db.close();
 	}
 
 	static async getAllRequest(to_user_id) {
@@ -38,11 +38,9 @@ export default class Request {
 		try {
 			const requests = await db.select().from(Requests).where(Requests.to_user_id.eq(to_user_id));
 			db.observe(requests, (changes) => console.log('Changes are: ', changes));
-			db.close();
-			return requests;
+			return requests.exec();
 		} catch(e) {
 			console.log(e);
-			db.close();
 			return [];
 		}
 	}

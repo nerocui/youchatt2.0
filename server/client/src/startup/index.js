@@ -41,7 +41,9 @@ function loadInitialState(db_param) {
 
 		try {
 			const profile = await Profile.getCurrentProfile();
+			console.log('logged in profile: ', profile);
 			const requests = await Request.getAllRequest(profile.id);
+			console.log('some requets: ', requests);
 			authState = Object.assign({}, authState,{ user: profile});
 			requestState = Object.assign({}, requestState, { requests });
 
