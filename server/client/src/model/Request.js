@@ -34,35 +34,58 @@ export default class Request {
 		}
 	}
 
+
+	/**
+	 [{
+		addedCount: 1, -> number
+		index: 0, -> number
+		object: [
+			{//Request Object
+				from_user_id,
+				from_user_name,
+				from_user_pic,
+				id,
+				read,
+				to_user_id,
+			},
+			...
+		],
+		removed: [],
+		type: 'splice',
+		length: 1, -> number
+		},
+		...]
+		*/
 	static async getAllRequest(to_user_id) {
 		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
-		try {
-			const requests = await db.select().from(Requests).where(Requests.to_user_id.eq(to_user_id));
-			/**
-			 [{
-				addedCount: 1, -> number
-				index: 0, -> number
-				object: [
-					{//Request Object
-						from_user_id,
-						from_user_name,
-						from_user_pic,
-						id,
-						read,
-						to_user_id,
-					},
-					...
-				],
-				removed: [],
-				type: 'splice',
-				length: 1, -> number
-			 },
-			 ...]
-			 */
-			return requests.exec();
-		} catch(e) {
-			console.log(e);
-			return [];
+		const localRequests = await db.select().from(Requests).where(Requests.to_user_id.eq(to_user_id)).exec();
+		if (await isOnline()) {
+			try {
+				return Axios.get('/api/request/all')
+					.then(res => {
+						const requests = res.data;
+						return Request.mergeNewRequestsWithLocal(requests, localRequests);
+					})
+					.catch(e => {
+						return localRequests;
+					});
+			} catch(e) {
+				console.log(e);
+				return [];
+			}
+		} else {
+			return localRequests;
 		}
+	}
+
+	static mergeNewRequestsWithLocal(newRequests, localRequests) {
+		return newRequests.map(r => {
+			localRequests.forEach(l => {
+				if (r.id === l.id) {
+					return l;
+				}
+			});
+
+		});
 	}
 }

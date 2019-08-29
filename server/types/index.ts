@@ -1,7 +1,6 @@
 import { IExtensions } from '../db/repos';
-import {IInitOptions, IDatabase, IMain} from 'pg-promise';
+import { IDatabase } from 'pg-promise';
 import * as algoliasearch from 'algoliasearch';
-import * as express from 'express';
 
 export type UserModel = {
 	id: string,
@@ -16,6 +15,7 @@ export type UserModel = {
 
 export type RequestModel = {
 	id: string,
+	from_user_id: string,
 	to_user_id: string,
 };
 

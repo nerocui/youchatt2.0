@@ -12,6 +12,32 @@ class RequestRouter {
 		this.router.post('/request/add', this.addRequest);
 		this.router.post('/request/accept', this.acceptRequest);
 		this.router.post('/request/decline', this.declineRequest);
+		this.router.get('/api/request/all', this.getAllMyRequest);
+	}
+
+	private async getAllMyRequest(req: Request, res: Response) {
+		if (!req.user) {
+			res.status(401);
+			res.redirect('/');
+		}
+		try {
+			const requests = await db.requests.findAll(req.user.id);
+			res.status(200);
+			res.send(requests.map(async request => {
+				const { from_user_id } = request;
+				const from_user = await db.users.findById(from_user_id);
+				return {
+					request_id: request.id,
+					from_user_id: from_user_id,
+					from_user_name: from_user.username,
+					from_user_pic: from_user.profile_pic,
+					to_user_id: req.user.id,
+				};
+			}));
+		} catch(e) {
+			res.status(500);
+			res.send(e);
+		}
 	}
 
 	private async addRequest(req: Request, res: Response) {
@@ -23,6 +49,7 @@ class RequestRouter {
 		}
 		const request: RequestModel = {
 			id: uniqid(),
+			from_user_id: req.user.id,
 			to_user_id,
 		};
 		const newRequest = await db.requests.add(request);

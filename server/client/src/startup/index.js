@@ -94,6 +94,7 @@ export async function startUp() {
 	dbStartUp(schemaBuilder);
 	schemaBuilder.connect()
 		.then(db => {
+			console.log('got db: ', db);
 			loadInitialState(db).then(initialState => {
 				console.log('initial state', initialState);
 				const store = createStoreWithMiddleware(
@@ -104,6 +105,12 @@ export async function startUp() {
 			});
 		})
 		.catch(e => {
-			console.log(e);
+			console.log('caught error');
+			const store = createStoreWithMiddleware(
+				rootReducer,
+				{},
+			);
+			renderApp(store);
 		});
+	console.log('got to the end');
 }

@@ -36,6 +36,7 @@ export class RequestRepository {
 	requestModelToArray(request: RequestModel) {
 		return [
 			request.id,
+			request.from_user_id,
 			request.to_user_id,
 		];
 	}
