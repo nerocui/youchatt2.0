@@ -1,13 +1,59 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import LoginPage from './LoginPage';
+import { connect } from 'react-redux';
+import ThreadsPage from './ThreadsPage';
+import ContactsPage from './ContactsPage';
+import MomentsPage from './MomentsPage';
+import ProfilePage from './ProfilePage';
+import { Page, Popup, Navbar, NavLeft, NavTitle, Tab, Tabs, Toolbar, NavTitleLarge, NavRight, Link, Searchbar, Icon } from 'framework7-react';
 
-const MainPage = () => {
-	return (
-		<div>
-			Main Page
-			<Link to='/search'>Search</Link>
-		</div>
-	);
+
+class MainPage extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+	render() {
+		return (
+			<Page pageContent={false}>
+				<Navbar sliding={false}>
+					<NavRight>
+						<Link panelOpen="left" iconIos="f7:add" iconAurora="f7:add" iconMd="material:add"></Link>
+					</NavRight>
+					<NavTitle>uChat</NavTitle>
+				</Navbar>
+				<Toolbar bottom tabbar>
+					<Link tabLink="#threadspage" tabLinkActive>Chats</Link>
+					<Link tabLink="#contactspage">Friends</Link>
+					<Link tabLink="#momentspage">Moments</Link>
+					<Link tabLink="#profilepage">Me</Link>
+				</Toolbar>
+				<Tabs swipeable>
+					<Tab className="page-content" tabActive id="threadspage">
+						<ThreadsPage />
+					</Tab>
+					<Tab className="page-content" id="contactspage">
+						<ContactsPage />
+					</Tab>
+					<Tab className="page-content" id="momentspage">
+						<MomentsPage />
+					</Tab>
+					<Tab className="page-content" id="profilepage">
+						<ProfilePage />
+					</Tab>
+				</Tabs>
+				<Popup opened={!this.props.loggedIn}>
+					<LoginPage />
+				</Popup>
+			</Page>
+		);
+	};
+} 
+
+function mapStateToProps(state) {
+	return {
+		user: state.authState.user,
+		loggedIn: state.authState.loggedIn,
+	};
 }
 
-export default MainPage;
+export default connect(mapStateToProps)(MainPage);

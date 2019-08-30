@@ -15,6 +15,10 @@ import notificationHandler from '../utils/notification/handler';
 import Request from '../model/Request';
 import lf from 'lovefield';
 import { APP_NAME } from '../config/app';
+import Framework7 from 'framework7/framework7.esm.bundle.js';
+import Framework7React from 'framework7-react';
+import ThemedApp from '../ui/ThemedApp';
+Framework7.use(Framework7React);
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(createStore);
 export let firebaseHelper;
@@ -72,7 +76,7 @@ export function renderApp(store) {
 	ReactDOM.render(
 		(
 			<Provider store={store}>
-				<App />
+				<ThemedApp />
 			</Provider>
 		),
 		document.getElementById('root')
