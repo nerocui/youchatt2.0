@@ -105,7 +105,16 @@ export default class Profile {
 
 	static async logout() {
 		//should only be called with log out to server or switch user
-		const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
-		db.update(Profiles).set(Profile.logged_in, false).exec();
+		return Axios.get('/api/logout')
+			.then(res => {
+				console.log('Res from logout: ', res);
+			})
+			.catch(err => {
+				console.log('Fail to call logout server: ', err);
+			})
+			.finally(() => {
+				const Profiles = db.getSchema().table(DB_CONFIG.PROFILE_DB_NAME);
+				db.update(Profiles).set(Profiles.logged_in, false).exec();
+			});
 	}
 }

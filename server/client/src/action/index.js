@@ -130,11 +130,24 @@ export function chat(thread) {
 	};
 }
 
-export function logout() {
+function setLogoutState() {
 	return {
 		type: TYPE.LOGOUT
 	};
 }
+
+export function logout() {
+	return dispatch => {
+		Profile.logout()
+			.catch(err => {
+				console.log('Error logging out: ', err);
+			})
+			.finally(() => {
+				dispatch(setLogoutState());
+			});
+	};
+}
+
 
 export function openSideMenu() {
 	return {
