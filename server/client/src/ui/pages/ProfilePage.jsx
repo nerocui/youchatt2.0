@@ -11,9 +11,9 @@ const ProfilePage = ({ user, loggedIn, logout }) => {
 				<Block strong style={{marginTop:0}}>
 					<img src={user.profile_pic} />
 					<h3>{user.username}</h3>
+					<h4>ID: {user.id}</h4><Button color="red" round onClick={logout}>Logout</Button>
 				</Block>
 			</div>
-			<Button fill color="red" round raised onClick={logout}>Logout</Button>
 		</Page>
 	);
 }

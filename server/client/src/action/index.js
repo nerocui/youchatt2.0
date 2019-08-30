@@ -61,7 +61,7 @@ function setSentRequest(res) {
 }
 
 export function sendRequest(to_user_id) {
-	console.log('setting token');
+	console.log('setting token, ', to_user_id);
 	return dispatch => {
 		axios.post('/api/request/add', null, {params: {to_user_id}})
 			.then(res => {
