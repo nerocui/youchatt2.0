@@ -18,6 +18,7 @@ import { APP_NAME } from '../config/app';
 import Framework7 from 'framework7/framework7.esm.bundle.js';
 import Framework7React from 'framework7-react';
 import ThemedApp from '../ui/ThemedApp';
+import 'framework7/css/framework7.bundle.css';
 Framework7.use(Framework7React);
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(createStore);
