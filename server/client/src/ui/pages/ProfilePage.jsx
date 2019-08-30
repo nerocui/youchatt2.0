@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 const ProfilePage = () => {
 	return (
@@ -8,4 +9,11 @@ const ProfilePage = () => {
 	);
 }
 
-export default ProfilePage;
+function mapStateToProps(state) {
+	return {
+		user: state.authState.user,
+		loggedIn: state.authState.loggedIn,
+	};
+}
+
+export default connect(mapStateToProps)(ProfilePage);
