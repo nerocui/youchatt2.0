@@ -28,6 +28,10 @@ export class MessageRepository {
 		return this.db.one(messages_sql.add, this.messageModelToArray(message));
 	}
 
+	async getOneWithId(id: string) {
+		return this.db.one('SELECT * FROM messages WHERE id=$1', id);
+	}
+
 	messageModelToArray(message: MessageModel) {
 		return [
 			message.id,

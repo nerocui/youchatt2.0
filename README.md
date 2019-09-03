@@ -1,6 +1,20 @@
 ## Youchatt 2.0
 Rewrite in express + react + postgres, using typescript
 
+## Screenshots
+
+![Friend List](https://github.com/nerocui/screenshots/blob/master/Screen%20Shot%202019-09-03%20at%2010.29.32%20AM.png?raw=true)
+
+Friend List
+
+![Profile Page](https://github.com/nerocui/screenshots/blob/master/Screen%20Shot%202019-09-03%20at%2010.29.51%20AM.png?raw=true)
+
+Profile Page
+
+![Search Page](https://github.com/nerocui/screenshots/blob/master/Screen%20Shot%202019-09-03%20at%2010.30.40%20AM.png?raw=true)
+
+User Search Page
+
 ## Project Structure
 ```
 ─── server
@@ -175,3 +189,7 @@ Rewrite in express + react + postgres, using typescript
 - Firebase
 - Algolia Search Client
 - Lovefield Relational Database based on IndexedDB
+
+## Feature Highlight
+- Push notification from Firebase
+- Search index from Algolia
