@@ -197,3 +197,68 @@ User Search Page
 - Search index from Algolia
 - Offline first design with Lovefield DB
 - Native looking UI with Framework7 React
+
+## How To Setup
+### API Key
+server/config/api_key.ts
+```ts
+export const key = {
+	googleClientId: 'YOUR GOOGLE CLIENTID HERE',
+	googleClientSecret: 'YOUR GOOGLE CLIENT SECRET HERE',
+	cookieKey: 'SOME RANDOM COOKIE KEY YOU CAN DEFINE HERE',
+	algoliaApplicationID: 'YOUR ALGOLIA APPLICATION ID',
+	algoliaSearchKey: 'YOUR ALGOLIA SEARCH KEY',
+	algoliaAdminKey: 'YOUR ALGOLIA ADMIN KEY',
+};
+```
+server/config/basicchat-dev-firebase-adminsdk-22jr8-c9fe2295e6.json
+
+You can download this file from Firebase Console page
+```json
+{
+  "type": "",
+  "project_id": "",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
+  "auth_uri": "",
+  "token_uri": "",
+  "auth_provider_x509_cert_url": "",
+  "client_x509_cert_url": ""
+}
+
+```
+server/config/db_config.json
+```json
+{
+	"host": "localhost",
+	"port": 5432,
+	"database": "basic-chat-db-dev",
+	"user": "YOUR DB USERNAME HERE",
+	"password": "YOUR DB PASSWORD HERE"
+}
+```
+server/client/src/keys/api_keys.js
+```js
+const keys = {
+	algoliaApplicationID: 'YOUR ALGOLIA APPLICATION ID',
+	algoliaSearchKey: 'YOUR ALGOLIA SEARCH KEY',
+};
+
+export default keys;
+```
+server/client/src/keys/fire_base_key.js
+```js
+const firebaseConfig = {
+	apiKey: "YOUR FIREBASE API KEY",
+	authDomain: "YOUR AUTH DOMAIN",
+	databaseURL: "YOUR DATABASE URL",
+	projectId: "YOUR PROJECT ID",
+	storageBucket: "",
+	messagingSenderId: "YOUR MESSAGING SENDER ID",
+	appId: "YOUR APP ID"
+};
+
+export default firebaseConfig;
+```
