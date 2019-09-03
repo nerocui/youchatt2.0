@@ -24,6 +24,14 @@ export type RelationshipModel = {
 	friend_id: string,
 };
 
+export type MessageModel = {
+	id: string,
+	content: string,
+	sender_id: string,
+	receiver_id: string,
+	seen: boolean,
+};
+
 export type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
 
 export type SearchEngine = {
