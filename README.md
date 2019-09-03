@@ -195,3 +195,5 @@ User Search Page
 ## Feature Highlight
 - Push notification from Firebase
 - Search index from Algolia
+- Offline first design with Lovefield DB
+- Native looking UI with Framework7 React
