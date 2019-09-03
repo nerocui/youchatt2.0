@@ -8,6 +8,7 @@ import ProfilePage from './ProfilePage';
 import { requestsChangeHandler, contactsChangeHandler } from '../../action';
 import { db } from '../../startup';
 import { DB_CONFIG } from '../../config/app';
+import { refreshAll } from '../../utils/notification/handler';
 import { Page, Popup, Navbar, NavLeft, NavTitle, Tab, Tabs, Toolbar, NavTitleLarge, NavRight, Link, Searchbar, Icon } from 'framework7-react';
 
 
@@ -18,6 +19,7 @@ class MainPage extends React.Component {
 
 	componentDidMount() {
 		this.handleObservers();
+		window.addEventListener('focus', () => refreshAll(this.props.user.id));
 	}
 
 	async handleObservers() {

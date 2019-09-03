@@ -37,7 +37,9 @@ function loadInitialState(db_param) {
 		},
 		threadState = {},
 		messageState = {},
-		requestState = {},
+		requestState = {
+			requests: [],
+		},
 		momentState = {},
 		profileState = {},
 		uiState = {},
@@ -49,10 +51,8 @@ function loadInitialState(db_param) {
 
 		try {
 			const profile = await Profile.getCurrentProfile();
-			console.log('logged in profile: ', profile);
 			const requests = await Request.getAllRequest(profile.id);
-			const contacts = await Contact.getAllContacts(profile.id);
-			console.log('some requets: ', requests);
+			const contacts = await Contact.getAllContacts();
 			authState = Object.assign({}, authState,{ user: profile, loggedIn: !!profile});
 			requestState = Object.assign({}, requestState, { requests });
 			contactState = Object.assign({}, contactState, { contacts });
@@ -71,7 +71,6 @@ function loadInitialState(db_param) {
 			resolve(state);
 		} catch(e) {
 			//user is not logged in, just console log it for now
-			console.log('Not logged in??', e);
 			resolve(state);
 		}
 	});
@@ -103,7 +102,6 @@ export async function startUp() {
 	dbStartUp(schemaBuilder);
 	schemaBuilder.connect()
 		.then(db => {
-			console.log('got db: ', db);
 			loadInitialState(db).then(initialState => {
 				console.log('initial state', initialState);
 				const store = createStoreWithMiddleware(
@@ -114,12 +112,10 @@ export async function startUp() {
 			});
 		})
 		.catch(e => {
-			console.log('caught error');
 			const store = createStoreWithMiddleware(
 				rootReducer,
 				{},
 			);
 			renderApp(store);
 		});
-	console.log('got to the end');
 }

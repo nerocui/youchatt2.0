@@ -12,7 +12,7 @@ class RequestRouter {
 		this.router.post('/request/add', this.addRequest);
 		this.router.post('/request/accept', this.acceptRequest);
 		this.router.post('/request/decline', this.declineRequest);
-		this.router.get('/api/request/all', this.getAllMyRequest);
+		this.router.get('/request/all', this.getAllMyRequest);
 	}
 
 	private async getAllMyRequest(req: Request, res: Response) {

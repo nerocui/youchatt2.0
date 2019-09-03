@@ -14,14 +14,13 @@ export default class Contact {
 		this.profile_pic = profile_pic;
 	}
 
-	static async getAllContacts(id) {
+	static async getAllContacts() {
 		const Contacts = db.getSchema().table(DB_CONFIG.USER_DB_NAME);
 		const localContacts =  await db.select().from(Contacts).exec();
 		if (await isOnline()) {
 			try {
 				return Axios.get('/api/friend/all')
 					.then(res => {
-						console.log('All Friend request res', res);
 						return res.data.map(c => {
 							const {
 								id, username, first_name, last_name, initials, profile_pic
@@ -36,7 +35,6 @@ export default class Contact {
 				console.log('Fail to fetch contacts:', e);
 			}
 		} else {
-			console.log('In else');
 			return localContacts;
 		}
 	}

@@ -1,4 +1,5 @@
 import Request from '../../model/Request';
+import Contact from '../../model/Contact';
 import TYPE from './type';
 
 export default function notificationHandler(res) {
@@ -31,4 +32,9 @@ export function handleFriendRequest(data) {
 		read === "true");
 	//validate
 	Request.saveRequest(request);
+}
+
+export async function refreshAll(id) {
+	await Request.getAllRequest(id);
+	await Contact.getAllContacts();
 }
