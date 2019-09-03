@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardFooter, Button } from 'framework7-react';
+import Request from '../../../model/Request';
 
 const FriendRequest = ({id, from_user_id, from_user_name, from_user_pic, to_user_id, read}) => {
 	return (
@@ -9,10 +10,10 @@ const FriendRequest = ({id, from_user_id, from_user_name, from_user_pic, to_user
 				<h4>{from_user_name}</h4>
 			</CardContent>
 			<CardFooter>
-				<Button>
+				<Button onClick={() => Request.declineRequest(id)}>
 					Decline
 				</Button>
-				<Button>
+				<Button onClick={() => Request.acceptRequest(id)}>
 					Accept
 				</Button>
 			</CardFooter>

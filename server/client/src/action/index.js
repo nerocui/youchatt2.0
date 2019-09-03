@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as algoliasearch from 'algoliasearch';
 import keys from '../keys/api_keys';
 import Profile from '../model/Profile';
+import Request from '../model/Request';
 import { firebaseHelper } from '../startup';
 
 const client = algoliasearch(keys.algoliaApplicationID, keys.algoliaSearchKey);
@@ -75,6 +76,15 @@ export function sendRequest(to_user_id) {
 	};
 }
 
+
+export function acceptRequest(id) {
+	Request.acceptRequest(id);
+}
+
+export function declineRequest(id) {
+	Request.declineRequest(id);
+}
+
 function updateProfileToken(message_token) {
 	return {
 		type: TYPE.SET_PROFILE_MESSAGE_TOKEN,
@@ -96,6 +106,17 @@ export function setContacts(contacts) {
 		type: TYPE.SET_CONTACTS,
 		payload: contacts,
 	};
+}
+
+export function contactsChangeHandler(changes) {
+	if (!changes||changes.length === 0) {
+		return;
+	}
+	const { object } = changes[0];
+	return dispatch => {
+		console.log('Detected contacts change: ', object);
+		dispatch(setContacts(object));
+	}
 }
 
 export function setThreads(threads) {

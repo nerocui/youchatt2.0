@@ -92,7 +92,10 @@ export class UsersRepository {
                 return rel.friend_id;
             }
         });
-        return this.db.any('SELECT * FROM users WHERE id IN ($1:csv)', friends);
+        if (friends.length === 0) {
+            return [];
+        }
+        return this.db.any('SELECT * FROM users WHERE id IN ($1:csv)', [friends]);
     }
 
     async removeFriend(user_id: string, friend_id: string) {

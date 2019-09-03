@@ -1,12 +1,10 @@
 import { Router, Request, Response } from 'express';
-import { ExtendedProtocol } from '../types';
+import { db } from '../db';
 
 class UserRouter {
 	public router: Router;
-	private db: ExtendedProtocol;
 
-	constructor(db: ExtendedProtocol) {
-		this.db = db;
+	constructor() {
 		this.router = Router();
 
 		this.router.get('/current_user', this.getCurrentUser);
@@ -27,9 +25,18 @@ class UserRouter {
 	
 	private async getAllFriends(req: Request, res: Response) {
 		try {
-			const users = await this.db.users.getAllFriend(req.user.id);
+			const users = await db.users.getAllFriend(req.user.id);
+			const friends = users.map(user => {
+				const {
+					id, username, first_name, last_name, initials, profile_pic
+				} = user;
+				return {
+					id, username, first_name, last_name, initials, profile_pic
+				};
+			})
+			console.log('Getting all friends: ', friends);
 			res.status(200);
-			res.send(users);
+			res.send(friends);
 		} catch(e) {
 			console.log('Error: ', e);
 			res.status(500);
@@ -44,7 +51,7 @@ class UserRouter {
 			res.send('Bad Request');
 		}
 		try {
-			this.db.users.updateMessageToken(id, message_token);
+			db.users.updateMessageToken(id, message_token);
 			res.status(200);
 			res.send('message token set');
 		} catch(e) {

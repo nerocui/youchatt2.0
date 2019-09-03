@@ -5,7 +5,7 @@ import ThreadsPage from './ThreadsPage';
 import ContactsPage from './ContactsPage';
 import MomentsPage from './MomentsPage';
 import ProfilePage from './ProfilePage';
-import { requestsChangeHandler } from '../../action';
+import { requestsChangeHandler, contactsChangeHandler } from '../../action';
 import { db } from '../../startup';
 import { DB_CONFIG } from '../../config/app';
 import { Page, Popup, Navbar, NavLeft, NavTitle, Tab, Tabs, Toolbar, NavTitleLarge, NavRight, Link, Searchbar, Icon } from 'framework7-react';
@@ -23,9 +23,11 @@ class MainPage extends React.Component {
 	async handleObservers() {
 		try {
 			const Requests = await db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
-			console.log('Requests Table is: ', Requests);
-			const query = await db.select().from(Requests).where(Requests.to_user_id.eq(this.props.user.id));
-			db.observe(query, this.props.requestsChangeHandler);
+			const Contacts = await db.getSchema().table(DB_CONFIG.USER_DB_NAME);
+			const requestsQuery = await db.select().from(Requests).where(Requests.to_user_id.eq(this.props.user.id));
+			const contactsQuery = await db.select().from(Contacts);
+			db.observe(requestsQuery, this.props.requestsChangeHandler);
+			db.observe(contactsQuery, this.props.contactsChangeHandler);
 		} catch(e) {
 			console.log(e);
 		}
@@ -75,4 +77,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, { requestsChangeHandler })(MainPage);
+export default connect(mapStateToProps, { requestsChangeHandler, contactsChangeHandler })(MainPage);
