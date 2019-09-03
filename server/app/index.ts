@@ -13,7 +13,7 @@ const appOption: AppOption = {
   features: [],
 };
 const app: App = new App(appOption, db, searchEngine);
-const userRouter: UserRouter = new UserRouter(db);
+const userRouter: UserRouter = new UserRouter();
 const requestRouter: RequestRouter = new RequestRouter();
 const authRouter: AuthRouter = new AuthRouter();
 app.addMiddleware(...middlewares)

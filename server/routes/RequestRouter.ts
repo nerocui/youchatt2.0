@@ -91,7 +91,7 @@ class RequestRouter {
 		let request: RequestModel;
 		try {
 			request = await db.requests.getOneWithId(id);
-			const user: UserModel = await db.users.addFriend(req.user.id, request.to_user_id);
+			const user: UserModel = await db.users.addFriend(request.from_user_id, request.to_user_id);
 			db.requests.remove(id);
 			res.status(201);
 			res.send(user);

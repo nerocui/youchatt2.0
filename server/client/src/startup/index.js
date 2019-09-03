@@ -13,8 +13,14 @@ import FirebaseHelper from './firebase';
 import Profile from '../model/Profile';
 import notificationHandler from '../utils/notification/handler';
 import Request from '../model/Request';
+import Contact from '../model/Contact';
 import lf from 'lovefield';
 import { APP_NAME } from '../config/app';
+import Framework7 from 'framework7/framework7.esm.bundle.js';
+import Framework7React from 'framework7-react';
+import ThemedApp from '../ui/ThemedApp';
+import 'framework7/css/framework7.bundle.css';
+Framework7.use(Framework7React);
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(createStore);
 export let firebaseHelper;
@@ -26,7 +32,9 @@ function loadInitialState(db_param) {
 	return new Promise(async (resolve, reject) => {
 		let state = {},
 		authState = {},
-		contactState = {},
+		contactState = {
+			contacts: [],
+		},
 		threadState = {},
 		messageState = {},
 		requestState = {},
@@ -37,16 +45,17 @@ function loadInitialState(db_param) {
 
 		uiState = {
 			sideMenuOpen: false,
-		}
+		};
 
 		try {
 			const profile = await Profile.getCurrentProfile();
 			console.log('logged in profile: ', profile);
 			const requests = await Request.getAllRequest(profile.id);
+			const contacts = await Contact.getAllContacts(profile.id);
 			console.log('some requets: ', requests);
 			authState = Object.assign({}, authState,{ user: profile, loggedIn: !!profile});
 			requestState = Object.assign({}, requestState, { requests });
-
+			contactState = Object.assign({}, contactState, { contacts });
 
 			state = {
 				authState,
@@ -62,7 +71,7 @@ function loadInitialState(db_param) {
 			resolve(state);
 		} catch(e) {
 			//user is not logged in, just console log it for now
-			console.log(e);
+			console.log('Not logged in??', e);
 			resolve(state);
 		}
 	});
@@ -72,7 +81,7 @@ export function renderApp(store) {
 	ReactDOM.render(
 		(
 			<Provider store={store}>
-				<App />
+				<ThemedApp />
 			</Provider>
 		),
 		document.getElementById('root')

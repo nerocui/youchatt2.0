@@ -78,6 +78,44 @@ export default class Request {
 		}
 	}
 
+	static async acceptRequest(id) {
+		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
+		const Contacts = db.getSchema().table(DB_CONFIG.USER_DB_NAME);
+		if (await isOnline()) {
+			try {
+				return Axios.post('/api/request/accept', null, {params: {id}})
+					.then(res => {
+						db.delete().from(Requests).where(Requests.id.eq(id)).exec();
+						const insert = db.insert().into(Contacts).values(lf.bind(0));
+						//insert.bind([[Requests.createRow(request)]]).exec();
+						insert.bind([[Contacts.createRow(res.data)]]).exec();
+					})
+					.catch(e => {
+						throw e;
+					});
+			} catch(e) {
+				console.log('Fail to accept request: ', e);
+			}
+		}
+	}
+
+	static async declineRequest(id) {
+		const Requests = db.getSchema().table(DB_CONFIG.REQUEST_DB_NAME);
+		if (await isOnline()) {
+			try {
+				return Axios.post('/api/request/decline', null, {params: {id}})
+					.then(res => {
+						db.delete().from(Requests).where(Requests.id.eq(id)).exec();
+					})
+					.catch(e => {
+						throw e;
+					});
+			} catch(e) {
+				console.log('Fail to decline request: ', e);
+			}
+		}
+	}
+
 	static mergeNewRequestsWithLocal(newRequests, localRequests) {
 		return newRequests.map(r => {
 			localRequests.forEach(l => {

@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as algoliasearch from 'algoliasearch';
 import keys from '../keys/api_keys';
 import Profile from '../model/Profile';
+import Request from '../model/Request';
 import { firebaseHelper } from '../startup';
 
 const client = algoliasearch(keys.algoliaApplicationID, keys.algoliaSearchKey);
@@ -61,7 +62,7 @@ function setSentRequest(res) {
 }
 
 export function sendRequest(to_user_id) {
-	console.log('setting token');
+	console.log('setting token, ', to_user_id);
 	return dispatch => {
 		axios.post('/api/request/add', null, {params: {to_user_id}})
 			.then(res => {
@@ -73,6 +74,15 @@ export function sendRequest(to_user_id) {
 				console.log('could not send request: ', e);
 			});
 	};
+}
+
+
+export function acceptRequest(id) {
+	Request.acceptRequest(id);
+}
+
+export function declineRequest(id) {
+	Request.declineRequest(id);
 }
 
 function updateProfileToken(message_token) {
@@ -96,6 +106,17 @@ export function setContacts(contacts) {
 		type: TYPE.SET_CONTACTS,
 		payload: contacts,
 	};
+}
+
+export function contactsChangeHandler(changes) {
+	if (!changes||changes.length === 0) {
+		return;
+	}
+	const { object } = changes[0];
+	return dispatch => {
+		console.log('Detected contacts change: ', object);
+		dispatch(setContacts(object));
+	}
 }
 
 export function setThreads(threads) {
@@ -130,11 +151,24 @@ export function chat(thread) {
 	};
 }
 
-export function logout() {
+function setLogoutState() {
 	return {
 		type: TYPE.LOGOUT
 	};
 }
+
+export function logout() {
+	return dispatch => {
+		Profile.logout()
+			.catch(err => {
+				console.log('Error logging out: ', err);
+			})
+			.finally(() => {
+				dispatch(setLogoutState());
+			});
+	};
+}
+
 
 export function openSideMenu() {
 	return {
