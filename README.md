@@ -1,7 +1,7 @@
 ## Youchatt 2.0
 Rewrite in express + react + postgres, using typescript
 
-This project is meant for me to practice software angineer skills by building a simple chat app that mimics the features in wechat. This is by no means a product. I will publish what I have learned from this project in my [blog](https://nerocui.com). Part 1 about refactoring the OG code base to a scalable project is already published [here](https://nerocui.com/2019/08/25/how-i-refactored-my-expressjs-codea-chat-app/). 
+This project is meant for me to practice software engineering skills by building a simple chat app that mimics the features in wechat. This is by no means a product. I will publish what I have learned from this project in my [blog](https://nerocui.com). Part 1 about refactoring the OG code base to a scalable project is already published [here](https://nerocui.com/2019/08/25/how-i-refactored-my-expressjs-codea-chat-app/). 
 
 ## Screenshots
 
