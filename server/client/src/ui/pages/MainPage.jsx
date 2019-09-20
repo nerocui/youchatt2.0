@@ -19,7 +19,11 @@ class MainPage extends React.Component {
 
 	componentDidMount() {
 		this.handleObservers();
-		window.addEventListener('focus', () => refreshAll(this.props.user.id));
+		window.addEventListener('focus', () => {
+			if (this.props.user && this.props.user.id) {
+				refreshAll(this.props.user.id)
+			}
+		});
 	}
 
 	async handleObservers() {

@@ -1,7 +1,7 @@
 import * as TYPE from './type';
 import axios from 'axios';
 import * as algoliasearch from 'algoliasearch';
-import keys from '../keys/api_keys';
+import keys from '../keys/algolia_key';
 import Profile from '../model/Profile';
 import Request from '../model/Request';
 import { firebaseHelper } from '../startup';
